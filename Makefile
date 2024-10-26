@@ -4,7 +4,7 @@ clean-up:
 	./bin/omnibus clean test --purge
 
 build:
-	./bin/omnibus build test
+	./bin/omnibus build test -l=debug
 
 status:
 	systemctl status test

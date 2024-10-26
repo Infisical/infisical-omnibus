@@ -9,3 +9,5 @@ bin/*
 files/**/cache/
 vendor/cookbooks
 node_modules
+local
+infisical-tmp
