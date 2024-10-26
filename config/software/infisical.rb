@@ -26,7 +26,8 @@ build do
       
       copy "#{Dir.pwd}/../standalone-entrypoint.sh", "#{install_dir}/server"
 
-      command "chmod 555 #{install_dir}/server/standalone-entrypoint.sh"
+      # TODO(akhilmhdh): Make this back to 555
+      command "chmod 777 #{install_dir}/server/standalone-entrypoint.sh"
 
       # after build we need only prod node_modules. So we recreate it
       delete "#{Dir.pwd}/node-modules"
@@ -57,7 +58,9 @@ build do
       copy "#{Dir.pwd}/scripts", "#{install_dir}/server/#{frontend_folder_name}"
       copy "#{Dir.pwd}/public", "#{install_dir}/server/#{frontend_folder_name}"
 
-      command "chmod -R 555 #{install_dir}/server/#{frontend_folder_name}/scripts"
+      # TODO(akhilmhdh): Make this back to 555
+      # command "chmod -R 555 #{install_dir}/server/#{frontend_folder_name}/scripts"
+      command "chmod -R 777 #{install_dir}/server/#{frontend_folder_name}"
     end
   end
   
