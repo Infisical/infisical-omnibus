@@ -1,0 +1,26 @@
+#!/bin/bash
+#
+# Perform necessary test cleanup steps after package is uninstalled.
+#
+
+PROGNAME=$(basename $0)
+
+error_exit()
+{
+  echo "${PROGNAME}: ${1:-"Unknown Error"}" 1>&2
+  exit 1
+}
+
+# Stop and disable service
+systemctl stop test >/dev/null 2>&1
+systemctl disable test >/dev/null 2>&1
+rm -f /etc/systemd/system/test.service
+systemctl daemon-reload
+
+# Remove logs directory
+rm -rf /var/log/test
+
+# Remove fastify user
+userdel fastify >/dev/null 2>&1
+
+exit 0

@@ -1,0 +1,49 @@
+#!/bin/bash
+#
+# Perform necessary test setup steps after package is installed.
+#
+
+PROGNAME=$(basename $0)
+
+error_exit()
+{
+  echo "${PROGNAME}: ${1:-"Unknown Error"}" 1>&2
+  exit 1
+}
+
+# Create fastify service user
+id -u fastify >/dev/null 2>&1 || \
+  useradd -r -d /opt/test -s /sbin/nologin \
+    -c "fastify service account" fastify
+
+# Create required directories
+mkdir -p /var/log/test
+chown -R fastify:fastify /var/log/test
+chmod 755 /var/log/test
+
+# Create systemd service file
+cat > /etc/systemd/system/test.service <<EOF
+[Unit]
+Description=Fastify Server
+After=network.target
+
+[Service]
+Type=simple
+User=fastify
+Group=fastify
+WorkingDirectory=/opt/test
+Environment=NODE_ENV=production
+ExecStart=/opt/test/bin/node /opt/test/src/app.js
+Restart=always
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target
+EOF
+
+# Reload systemd and enable service
+systemctl daemon-reload
+systemctl enable test
+systemctl start test
+
+exit 0
