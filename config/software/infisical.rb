@@ -23,6 +23,10 @@ build do
       copy "#{Dir.pwd}/package.json", "#{install_dir}/server/"
       copy "#{Dir.pwd}/package-lock.json", "#{install_dir}/server/"
       copy "#{Dir.pwd}/dist/*", "#{install_dir}/server"
+      
+      copy "#{Dir.pwd}/../standalone-entrypoint.sh", "#{install_dir}/server"
+
+      command "chmod 555 #{install_dir}/server/standalone-entrypoint.sh"
 
       # after build we need only prod node_modules. So we recreate it
       delete "#{Dir.pwd}/node-modules"
@@ -47,11 +51,13 @@ build do
       # Copy build artifacts
       copy "#{Dir.pwd}/package.json", "#{install_dir}/server/#{frontend_folder_name}"
       copy "#{Dir.pwd}/package-lock.json", "#{install_dir}/server/#{frontend_folder_name}"
-      copy "#{Dir.pwd}/.next/standalone", "#{install_dir}/server/#{frontend_folder_name}"
+      copy "#{Dir.pwd}/.next/standalone/*", "#{install_dir}/server/#{frontend_folder_name}"
       copy "#{Dir.pwd}/.next/static", "#{install_dir}/server/#{frontend_folder_name}/.next/static"
       copy "#{Dir.pwd}/.next/cache/images", "#{install_dir}/server/#{frontend_folder_name}/.next/cache/images"
-      copy "#{Dir.pwd}/scripts", "#{install_dir}/server/#{frontend_folder_name}/scripts"
+      copy "#{Dir.pwd}/scripts", "#{install_dir}/server/#{frontend_folder_name}"
       copy "#{Dir.pwd}/public", "#{install_dir}/server/#{frontend_folder_name}"
+
+      command "chmod -R 555 #{install_dir}/server/#{frontend_folder_name}/scripts"
     end
   end
   

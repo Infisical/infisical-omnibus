@@ -16,10 +16,7 @@ id -u fastify >/dev/null 2>&1 || \
   useradd -r -d /opt/test -s /sbin/nologin \
     -c "fastify service account" fastify
 
-# Create required directories
-mkdir -p /var/log/test
-chown -R fastify:fastify /var/log/test
-chmod 755 /var/log/test
+
 
 # Create systemd service file
 cat > /etc/systemd/system/test.service <<EOF
@@ -31,9 +28,9 @@ After=network.target
 Type=simple
 User=fastify
 Group=fastify
-WorkingDirectory=/opt/test
+WorkingDirectory=/opt/test/server
 Environment=NODE_ENV=production
-ExecStart=/opt/test/bin/node /opt/test/src/app.js
+ExecStart=./standalone-entrypoint.sh
 Restart=always
 RestartSec=10
 
