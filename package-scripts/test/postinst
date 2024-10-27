@@ -16,6 +16,7 @@ id -u fastify >/dev/null 2>&1 || \
   useradd -r -d /opt/test -s /sbin/nologin \
     -c "fastify service account" fastify
 
+export PATH=$PATH:/opt/bin
 
 
 # Create systemd service file
@@ -41,7 +42,8 @@ EOF
 
 # Reload systemd and enable service
 systemctl daemon-reload
-systemctl enable test
-systemctl start test
+# This should triggered by the ctl commands
+# systemctl enable test
+# systemctl start test
 
 exit 0

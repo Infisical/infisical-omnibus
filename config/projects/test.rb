@@ -17,11 +17,15 @@ install_dir "#{default_root}/#{name}"
 build_version Omnibus::BuildVersion.semver
 build_iteration 1
 
+override :libffi, version: "3.4.2"
+
 # Creates required build directories
 dependency "preparation"
 
 # test dependencies/components
-dependency "infisical"
+# dependency "infisical"
+
+dependency "infisical-ctl"
 
 
 exclude "**/.git"
