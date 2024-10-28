@@ -20,19 +20,21 @@ build do
       mkdir  "#{install_dir}/server"
       
       # Copy build artifacts
+      copy "#{Dir.pwd}/dist", "#{install_dir}/server"
       copy "#{Dir.pwd}/package.json", "#{install_dir}/server/"
       copy "#{Dir.pwd}/package-lock.json", "#{install_dir}/server/"
-      copy "#{Dir.pwd}/dist/*", "#{install_dir}/server"
       
       copy "#{Dir.pwd}/../standalone-entrypoint.sh", "#{install_dir}/server"
 
       # TODO(akhilmhdh): Make this back to 555
-      command "chmod 777 #{install_dir}/server/standalone-entrypoint.sh"
+      command "id -u fastify >/dev/null 2>&1 || useradd -r -d /opt/test -s /sbin/nologin -c \"fastify service account\" fastify"
+
 
       # after build we need only prod node_modules. So we recreate it
-      delete "#{Dir.pwd}/node-modules"
+      delete "#{Dir.pwd}/node_modules"
       command "npm ci --only-production", env: env, cwd: Dir.pwd
-      copy "#{Dir.pwd}/node-modules", "#{install_dir}/server/"
+      command "ls -a", cwd:Dir.pwd
+      copy "#{Dir.pwd}/node_modules", "#{install_dir}/server"
     end
   end
 
@@ -60,9 +62,10 @@ build do
 
       # TODO(akhilmhdh): Make this back to 555
       # command "chmod -R 555 #{install_dir}/server/#{frontend_folder_name}/scripts"
-      command "chmod -R 777 #{install_dir}/server/#{frontend_folder_name}"
     end
   end
+  
+  whitelist_file %r{-musl.node}
   
 
   # Install dependencies

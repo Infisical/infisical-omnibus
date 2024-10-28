@@ -23,9 +23,9 @@ override :libffi, version: "3.4.2"
 dependency "preparation"
 
 # test dependencies/components
-# dependency "infisical"
+dependency "infisical"
 
-dependency "infisical-ctl"
+# dependency "infisical-ctl"
 
 
 exclude "**/.git"

@@ -20,6 +20,8 @@ systemctl daemon-reload
 # Remove logs directory
 rm -rf /var/log/test
 
+rm -rf /opt/test
+
 # Remove fastify user
 userdel fastify >/dev/null 2>&1
 
