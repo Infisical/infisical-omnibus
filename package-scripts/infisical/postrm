@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# Perform necessary test cleanup steps after package is uninstalled.
+# Perform necessary infisical cleanup steps after package is uninstalled.
 #
 
 PROGNAME=$(basename $0)
@@ -12,15 +12,15 @@ error_exit()
 }
 
 # Stop and disable service
-systemctl stop test >/dev/null 2>&1
-systemctl disable test >/dev/null 2>&1
-rm -f /etc/systemd/system/test.service
+systemctl stop infisical >/dev/null 2>&1
+systemctl disable infisical >/dev/null 2>&1
+rm -f /etc/systemd/system/infisical.service
 systemctl daemon-reload
 
 # Remove logs directory
-rm -rf /var/log/test
+rm -rf /var/log/infisical
 
-rm -rf /opt/test
+rm -rf /opt/infisical
 
 # Remove fastify user
 userdel fastify >/dev/null 2>&1

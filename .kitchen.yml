@@ -5,7 +5,7 @@ driver:
     cpus: 2
     memory: 2048
   synced_folders:
-    - ['.', '/home/vagrant/test']
+    - ['.', '/home/vagrant/infisical']
 
 provisioner:
   name: chef_zero
@@ -38,4 +38,4 @@ suites:
         build_user:          vagrant
         build_user_group:    vagrant
         build_user_password: vagrant
-        install_dir:         /opt/test
+        install_dir:         /opt/infisical

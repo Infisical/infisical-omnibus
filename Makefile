@@ -1,14 +1,14 @@
 clean-up:
-	dpkg -r test && \
+	dpkg -r infisical && \
 	rm -rf pkg && \
-	./bin/omnibus clean test --purge
+	./bin/omnibus clean infisical --purge
 
 reset:
-	dpkg -r test && \
+	dpkg -r infisical && \
 	rm -rf pkg
 
 build:
-	./bin/omnibus build test -l=debug
+	./bin/omnibus build infisical -l=debug
 
 status:
-	systemctl status test
+	systemctl status infisical

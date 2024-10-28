@@ -1,7 +1,7 @@
-test Omnibus project
+infisical Omnibus project
 ====================
 This project creates full-stack platform-specific packages for
-`test`!
+`infisical`!
 
 Installation
 ------------
@@ -19,7 +19,7 @@ Usage
 You create a platform-specific package using the `build project` command:
 
 ```shell
-$ bin/omnibus build test
+$ bin/omnibus build infisical
 ```
 
 The platform/architecture type of the package created will match the platform
@@ -33,15 +33,15 @@ You can clean up all temporary files generated during the build process with
 the `clean` command:
 
 ```shell
-$ bin/omnibus clean test
+$ bin/omnibus clean infisical
 ```
 
 Adding the `--purge` purge option removes __ALL__ files generated during the
-build including the project install directory (`/opt/test`) and
+build including the project install directory (`/opt/infisical`) and
 the package cache directory (`/var/cache/omnibus/pkg`):
 
 ```shell
-$ bin/omnibus clean test --purge
+$ bin/omnibus clean infisical --purge
 ```
 
 ### Publish
@@ -94,10 +94,10 @@ there is nothing that restricts you from building on other platforms. Simply use
 the [omnibus cookbook](https://github.com/chef-cookbooks/omnibus) to setup your
 desired platform and execute the build steps listed above.
 
-The default build environment requires Test Kitchen and VirtualBox for local
-development. Test Kitchen also exposes the ability to provision instances using
+The default build environment requires Infisical Kitchen and VirtualBox for local
+development. Infisical Kitchen also exposes the ability to provision instances using
 various cloud providers like AWS, DigitalOcean, or OpenStack. For more
-information, please see the [Test Kitchen documentation](https://kitchen.ci/).
+information, please see the [Infisical Kitchen documentation](https://kitchen.ci/).
 
 Once you have tweaked your [`.kitchen.yml`](.kitchen.yml) (or
 [`.kitchen.local.yml`](.kitchen.local.yml)) to your liking, you can bring up an
@@ -115,9 +115,9 @@ section:
 $ bin/kitchen login ubuntu-1804
 [vagrant@ubuntu...] $ .  load-omnibus-toolchain.sh
 [vagrant@ubuntu...] $ [ -e .bundle ] && sudo chown -R vagrant:vagrant .bundle
-[vagrant@ubuntu...] $ cd test   # or 'cd test/omnibus' if your omnibus project is embedded in your main project
+[vagrant@ubuntu...] $ cd infisical   # or 'cd infisical/omnibus' if your omnibus project is embedded in your main project
 [vagrant@ubuntu...] $ bundle install
-[vagrant@ubuntu...] $ bin/omnibus build test
+[vagrant@ubuntu...] $ bin/omnibus build infisical
 ```
 
 For a complete list of all commands and platforms, run `kitchen list` or

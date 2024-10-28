@@ -1,0 +1,61 @@
+#!/bin/bash
+#
+# Perform necessary infisical setup steps after package is installed.
+#
+
+PROGNAME=$(basename $0)
+
+error_exit()
+{
+  echo "${PROGNAME}: ${1:-"Unknown Error"}" 1>&2
+  exit 1
+}
+
+# Create infisical service user
+id -u infisical >/dev/null 2>&1 || \
+  useradd -r -d /opt/infisical -s /sbin/nologin \
+    -c "infisical service account" infisical
+
+chown -R "infisical:infisical" /opt/infisical/server/frontend-build/scripts /opt/infisical/server/frontend-build/public/data /opt/infisical/server/frontend-build/.next /opt/infisical/server/standalone-entrypoint.sh
+chmod -R 555 /opt/infisical/server/frontend-build/scripts  /opt/infisical/server/standalone-entrypoint.sh
+chmod -R 755 /opt/infisical/server/frontend-build/.next
+
+chmod +x /opt/infisical/bin/node /opt/infisical/bin/npm /opt/infisical/bin/npx
+
+chown -R infisical /etc/ssl/certs
+chown infisical /etc/ssl/certs/ca-certificates.crt
+chmod -R u+rwx /etc/ssl/certs
+chmod u+rw /etc/ssl/certs/ca-certificates.crt
+chown infisical /usr/sbin/update-ca-certificates
+chmod u+rx /usr/sbin/update-ca-certificates
+
+
+# Create systemd service file
+cat > /etc/systemd/system/infisical.service <<EOF
+[Unit]
+Description=Fastify Server
+After=network.target
+
+[Service]
+Type=simple
+User=infisical
+Group=infisical
+WorkingDirectory=/opt/infisical/server
+Environment=NODE_ENV=production
+Environment="PATH=$PATH:/opt/infisical/bin"
+EnvironmentFile=/etc/infisical/infisical.env
+ExecStart=/opt/infisical/server/standalone-entrypoint.sh
+Restart=always
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target
+EOF
+
+# Reload systemd and enable service
+systemctl daemon-reload
+# This should triggered by the ctl commands
+systemctl enable infisical
+systemctl start infisical
+
+exit 0

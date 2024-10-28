@@ -27,7 +27,7 @@ build do
       copy "#{Dir.pwd}/../standalone-entrypoint.sh", "#{install_dir}/server"
 
       # TODO(akhilmhdh): Make this back to 555
-      command "id -u fastify >/dev/null 2>&1 || useradd -r -d /opt/test -s /sbin/nologin -c \"fastify service account\" fastify"
+      command "id -u fastify >/dev/null 2>&1 || useradd -r -d /opt/infisical -s /sbin/nologin -c \"fastify service account\" fastify"
 
 
       # after build we need only prod node_modules. So we recreate it

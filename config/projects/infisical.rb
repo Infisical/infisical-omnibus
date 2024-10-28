@@ -4,12 +4,12 @@
 # All Rights Reserved.
 #
 
-name "test"
+name "infisical"
 maintainer "CHANGE ME"
 homepage "https://CHANGE-ME.com"
 
-# Defaults to C:/test on Windows
-# and /opt/test on all other platforms
+# Defaults to C:/infisical on Windows
+# and /opt/infisical on all other platforms
 install_dir "#{default_root}/#{name}"
 # install_dir File.expand_path(File.join(Omnibus::Config.project_root, 'infisical-tmp'))
 
@@ -22,7 +22,7 @@ override :libffi, version: "3.4.2"
 # Creates required build directories
 dependency "preparation"
 
-# test dependencies/components
+# infisical dependencies/components
 dependency "infisical"
 
 # dependency "infisical-ctl"

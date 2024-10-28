@@ -15,7 +15,7 @@
 #
 
 # These options are required for all software definitions
-name "test-zlib"
+name "infisical-zlib"
 default_version "1.2.6"
 
 # A software can specify more than one version that is available for install
