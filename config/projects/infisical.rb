@@ -17,16 +17,21 @@ install_dir "#{default_root}/#{name}"
 build_version Omnibus::BuildVersion.semver
 build_iteration 1
 
+replace         'infisical'
+conflict        'infisical'
+
 override :libffi, version: "3.4.2"
 
 # Creates required build directories
 dependency "preparation"
 
 # infisical dependencies/components
-dependency "infisical"
+# dependency "infisical"
 
-# dependency "infisical-ctl"
-
+dependency "omnibus-infisical-gems"
+dependency "infisical-cookbooks"
+dependency "infisical-scripts"
+dependency "infisical-ctl"
 
 exclude "**/.git"
 exclude "**/bundler/git"

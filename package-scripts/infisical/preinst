@@ -4,4 +4,5 @@
 # before package is installed.
 #
 
+# TODO(akhilmhdh)
 echo "You're about to install infisical!"
