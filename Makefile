@@ -8,7 +8,8 @@ reset:
 	rm -rf pkg
 
 build:
-	./bin/omnibus build infisical -l=debug
+	unset MAKELEVEL && unset MAKEFLAGS && unset MFLAGS && \
+			./bin/omnibus build infisical -l=debug
 
 status:
 	systemctl status infisical

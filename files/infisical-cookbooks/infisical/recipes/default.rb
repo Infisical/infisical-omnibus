@@ -2,8 +2,8 @@
 puts "success my boy"
 
 
-directory "Create /var/log/gitlab" do
-  path "/var/log/gitlab"
+directory "Create /var/log/infisicalcal" do
+  path "/var/log/infisical"
   owner "root"
   group "root"
   mode "0755"
