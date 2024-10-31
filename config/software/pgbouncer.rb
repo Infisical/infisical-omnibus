@@ -26,7 +26,6 @@ dependency 'libevent'
 dependency 'openssl' unless Build::Check.use_system_ssl?
 
 source github: "pgbouncer/pgbouncer"
-relative_path "pgbouncer"
 
 build do
   env = with_standard_compiler_flags(with_embedded_path)

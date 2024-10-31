@@ -1,3 +1,5 @@
+.PHONY: clean-up reset status
+
 clean-up:
 	dpkg -r infisical && \
 	rm -rf pkg && \
@@ -6,10 +8,6 @@ clean-up:
 reset:
 	dpkg -r infisical && \
 	rm -rf pkg
-
-build:
-	unset MAKELEVEL && unset MAKEFLAGS && unset MFLAGS && \
-			./bin/omnibus build infisical -l=debug
 
 status:
 	systemctl status infisical

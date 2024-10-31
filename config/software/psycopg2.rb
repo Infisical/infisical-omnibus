@@ -37,6 +37,7 @@ build do
   # Prepend PostgreSQL's bin directory to the PATH, so that setup.py can find pg_config and build against it
   env['PATH'] = "#{install_dir}/embedded/postgresql/#{pg_major_version}/bin:#{env['PATH']}"
 
+  command "#{install_dir}/embedded/bin/pip3 install setuptools", env: env
   command "#{install_dir}/embedded/bin/python3 setup.py build_ext", env: env
   command "#{install_dir}/embedded/bin/python3 setup.py install", env: env
 end

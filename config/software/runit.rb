@@ -15,18 +15,18 @@
 #
 
 name 'runit'
-default_version '2.1.2'
+default_version '2.2.0'
 
 license 'BSD-3-Clause'
 license_file '../package/COPYING'
 
 skip_transitive_dependency_licensing true
 
-version '2.1.2' do
-  source sha256: '6fd0160cb0cf1207de4e66754b6d39750cff14bb0aa66ab49490992c0c47ba18'
+version '2.2.0' do
+  source sha256: '95ef4d2868b978c7179fe47901e5c578e11cf273d292bd6208bd3a7ccb029290'
 end
 
-source url: "http://smarden.org/runit/runit-#{version}.tar.gz"
+source url: "https://smarden.org/runit/runit-#{version}.tar.gz"
 
 relative_path "admin/runit-#{version}/src"
 
