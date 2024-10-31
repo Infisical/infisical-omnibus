@@ -1,5 +1,9 @@
 #
-# Copyright:: Copyright (c) 2017 GitLab Inc.
+# Cookbook Name:: package
+# Recipe:: runit_sysvinit
+#
+# Copyright 2011, Opscode, Inc.
+# Copyright 2014 GitLab.com
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -14,12 +18,13 @@
 # limitations under the License.
 #
 
-class Chef
-  module Formatters
-    class Infisical < Formatters::Doc
-      cli_name(:infisical)
+# We assume you are sysvinit
+svdir_line = 'CS:123456:respawn:/opt/infisical/embedded/bin/runsvdir-start'
+execute "echo '#{svdir_line}' >> /etc/inittab" do
+  not_if "grep '#{svdir_line}' /etc/inittab"
+  notifies :run, 'execute[init q]', :immediately
+end
 
-      def handler_executed(handler); end
-    end
-  end
+execute 'init q' do
+  action :nothing
 end

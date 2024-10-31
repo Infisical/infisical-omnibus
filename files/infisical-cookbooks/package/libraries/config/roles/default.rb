@@ -1,5 +1,5 @@
-#
 # Copyright:: Copyright (c) 2017 GitLab Inc.
+# License:: Apache License, Version 2.0
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -14,12 +14,20 @@
 # limitations under the License.
 #
 
-class Chef
-  module Formatters
-    class Infisical < Formatters::Doc
-      cli_name(:infisical)
+module DefaultRole
+  class << self
+    def load_role
+      # Default role is only enabled if no other service role is enabled
+      return unless no_service_roles_enabled?
 
-      def handler_executed(handler); end
+      service_exclusions = []
+      service_exclusions << 'infisical_role' if Infisical['infisical_core']['enable'] == false
+
+      Services.enable_group(Services::DEFAULT_GROUP, except: service_exclusions)
+    end
+
+    def no_service_roles_enabled?
+      Infisical.available_roles.select { |key, role| role[:manage_services] && Infisical["#{key}_role"]['enable'] }.count.zero?
     end
   end
 end

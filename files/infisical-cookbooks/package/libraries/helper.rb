@@ -1,5 +1,6 @@
 #
 # Copyright:: Copyright (c) 2017 GitLab Inc.
+# License:: Apache License, Version 2.0
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -14,12 +15,11 @@
 # limitations under the License.
 #
 
-class Chef
-  module Formatters
-    class Infisical < Formatters::Doc
-      cli_name(:infisical)
-
-      def handler_executed(handler); end
-    end
-  end
-end
+require 'uri'
+require 'digest'
+require_relative 'helpers/selinux_distro_helper'
+require_relative 'helpers/selinux_helper'
+require_relative 'helpers/secrets_helper'
+require_relative 'helpers/version_helper'
+require_relative 'helpers/output_helper'
+require_relative 'helpers/logging_helper'

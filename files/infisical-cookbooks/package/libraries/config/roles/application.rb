@@ -1,5 +1,5 @@
-#
 # Copyright:: Copyright (c) 2017 GitLab Inc.
+# License:: Apache License, Version 2.0
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -14,12 +14,14 @@
 # limitations under the License.
 #
 
-class Chef
-  module Formatters
-    class Infisical < Formatters::Doc
-      cli_name(:infisical)
+module ApplicationRole
+  def self.load_role
+    return unless Infisical['application_role']['enable']
 
-      def handler_executed(handler); end
-    end
+    # Run GitLab Rails related recipes unless explicitly disabled
+    Infisical['infisical_core']['enable'] = true if Infisical['infisical_core']['enable'].nil?
+    Infisical['nginx']['enable'] = true if Infisical['nginx']['enable'].nil?
+
+    Services.enable_group('infisical_role')
   end
 end

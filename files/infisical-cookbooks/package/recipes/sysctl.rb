@@ -1,5 +1,6 @@
 #
-# Copyright:: Copyright (c) 2017 GitLab Inc.
+# Copyright:: Copyright (c) 2020 GitLab Inc
+# License:: Apache License, Version 2.0
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,14 +13,11 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-#
 
-class Chef
-  module Formatters
-    class Infisical < Formatters::Doc
-      cli_name(:infisical)
+# ReLoad all sysctl settings
+execute "reload all sysctl conf" do
+  command "sysctl -e --system"
+  action :nothing
 
-      def handler_executed(handler); end
-    end
-  end
+  only_if { node['package']['modify_kernel_parameters'] }
 end

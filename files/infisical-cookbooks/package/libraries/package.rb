@@ -1,5 +1,5 @@
-#
-# Copyright:: Copyright (c) 2017 GitLab Inc.
+# Copyright:: Copyright (c) 2019 GitLab Inc.
+# License:: Apache License, Version 2.0
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -14,12 +14,18 @@
 # limitations under the License.
 #
 
-class Chef
-  module Formatters
-    class Infisical < Formatters::Doc
-      cli_name(:infisical)
+module Package
+  class << self
+    def parse_variables
+      parse_systemd_variables
+    end
 
-      def handler_executed(handler); end
+    def parse_systemd_variables
+      # If user has specified WantedBy but not After, set the latter to the
+      # former
+      return unless Infisical['package']['systemd_wanted_by']
+
+      Infisical['package']['systemd_after'] ||= Infisical['package']['systemd_wanted_by']
     end
   end
 end

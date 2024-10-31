@@ -1,5 +1,6 @@
 #
-# Copyright:: Copyright (c) 2017 GitLab Inc.
+# Copyright:: Copyright (c) 2020 GitLab Inc
+# License:: Apache License, Version 2.0
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,14 +13,22 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-#
 
-class Chef
-  module Formatters
-    class Infisical < Formatters::Doc
-      cli_name(:infisical)
+# Creates version file.
 
-      def handler_executed(handler); end
-    end
+resource_name :version_file
+provides :version_file
+
+actions :create
+default_action :create
+
+unified_mode true
+
+property :version_file_path, [String, nil], default: nil
+property :version_check_cmd, [String, nil], default: nil
+
+action :create do
+  file new_resource.version_file_path do
+    content VersionHelper.version(new_resource.version_check_cmd)
   end
 end

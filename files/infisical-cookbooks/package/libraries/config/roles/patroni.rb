@@ -1,5 +1,5 @@
-#
-# Copyright:: Copyright (c) 2017 GitLab Inc.
+# Copyright:: Copyright (c) 2021 GitLab Inc.
+# License:: Apache License, Version 2.0
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -14,12 +14,15 @@
 # limitations under the License.
 #
 
-class Chef
-  module Formatters
-    class Infisical < Formatters::Doc
-      cli_name(:infisical)
+module PatroniRole
+  def self.load_role
+    return unless Infisical['patroni_role']['enable']
 
-      def handler_executed(handler); end
-    end
+    # We need to set Infisical['infisical_core']['enable'] to true because DB
+    # creation in database_objects resource is gated on whether Rails is
+    # enabled or not.
+    Infisical['infisical_core']['enable'] = true if Infisical['infisical_core']['enable'].nil?
+
+    Services.enable_group('patroni_role')
   end
 end
