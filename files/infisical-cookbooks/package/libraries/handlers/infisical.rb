@@ -18,7 +18,7 @@ require 'chef/handler'
 require 'rainbow'
 require_relative '../omnibus_helper'
 
-module GitLabHandler
+module InfisicalHandler
   class Exception < Chef::Handler
     def report
       return unless run_status.failed?

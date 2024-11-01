@@ -41,24 +41,23 @@ module Infisical
 
   ## Attributes directly on the node
   attribute('package').use { Package }
-  attribute('registry',     priority: 20).use { Registry }
-  attribute('redis',        priority: 20).use { Redis }
-  attribute('postgresql',   priority: 20).use { Postgresql }
-  attribute('pgbouncer')
-  attribute('consul').use { Consul }
-  attribute('patroni').use { Patroni }
-  attribute('letsencrypt', priority: 17).use { LetsEncrypt } # After GitlabRails, but before Registry and Mattermost
+  # attribute('redis',        priority: 20).use { Redis }
+  # attribute('postgresql',   priority: 20).use { Postgresql }
+  # attribute('pgbouncer')
+  # attribute('consul').use { Consul }
+  # attribute('patroni').use { Patroni }
+  # attribute('letsencrypt', priority: 17).use { LetsEncrypt } # After GitlabRails, but before Registry and Mattermost
   attribute('logrotate')
 
   ## Attributes under node['infisical']
   attribute_block 'infisical' do
-    attribute('sentinel').use { Sentinel }
+    # attribute('sentinel').use { Sentinel }
     attribute('infisical_core', priority: 15).use { InfisicalCore } # Parse infisical first as others may depend on it
-    attribute('logging', priority: 20).use { Logging }
+    # attribute('logging', priority: 20).use { Logging }
     # Parse nginx last so all external_url are parsed before it
-    attribute('nginx', priority: 40).use do
-      Nginx
-    end
+    # attribute('nginx', priority: 40).use do
+    #   Nginx
+    # end
     attribute('external_url',            default: nil)
     attribute('registry_external_url',   default: nil)
     attribute('runtime_dir',             default: nil)

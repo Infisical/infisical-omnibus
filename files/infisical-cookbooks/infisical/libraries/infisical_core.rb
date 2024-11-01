@@ -1,5 +1,4 @@
-#
-# Copyright:: Copyright (c) 2017 GitLab Inc.
+# Copyright:: Copyright (c) 2016 GitLab Inc.
 # License:: Apache License, Version 2.0
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,9 +14,13 @@
 # limitations under the License.
 #
 
-require 'uri'
-require 'digest'
-require_relative 'helpers/secrets_helper'
-require_relative 'helpers/version_helper'
-require_relative 'helpers/output_helper'
-require_relative 'helpers/logging_helper'
+# TODO(akhilmhdh): bring nginx back later
+# require_relative 'nginx'
+require_relative '../../package/libraries/settings_dsl'
+require_relative '../../package/libraries/helpers/redis_helper/infisical_core'
+
+module InfisicalCore
+  class << self
+    def parse_variables; end
+  end
+end

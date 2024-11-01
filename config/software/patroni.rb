@@ -29,7 +29,8 @@ dependency 'psycopg2'
 build do
   env = with_standard_compiler_flags(with_embedded_path)
 
-  patch source: "add-license-file.patch"
+  # TODO(akhilmhdh): check this later
+  # patch source: 'add-license-file.patch'
 
   # Version 1.0 of PrettyTable does not work with Patroni 1.6.4
   # https://gitlab.com/gitlab-org/omnibus-gitlab/-/issues/5701

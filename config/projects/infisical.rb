@@ -4,9 +4,9 @@
 # All Rights Reserved.
 #
 
-name "infisical"
-maintainer "CHANGE ME"
-homepage "https://CHANGE-ME.com"
+name 'infisical'
+maintainer 'CHANGE ME'
+homepage 'https://CHANGE-ME.com'
 
 # Defaults to C:/infisical on Windows
 # and /opt/infisical on all other platforms
@@ -17,44 +17,40 @@ require "#{Omnibus::Config.project_root}/lib/infisical/util"
 require "#{Omnibus::Config.project_root}/lib/infisical/ohai_helper.rb"
 require "#{Omnibus::Config.project_root}/lib/infisical/build/check.rb"
 
-
 build_version Omnibus::BuildVersion.semver
 build_iteration 1
 
 replace         'infisical'
 conflict        'infisical'
 
-override :libffi, version: "3.4.2"
+override :libffi, version: '3.4.2'
 override :openssl, version: '3.0.12'
 
 # Creates required build directories
-dependency "preparation"
+dependency 'preparation'
 
 # infisical dependencies/components
 
-dependency "omnibus-infisical-gems"
-dependency "redis"
-dependency "jemalloc"
-dependency "logrotate"
-dependency "runit"
-dependency "consul"
+dependency 'omnibus-infisical-gems'
+dependency 'redis'
+dependency 'jemalloc'
+dependency 'logrotate'
+dependency 'runit'
+dependency 'consul'
 
+dependency 'infisical-pg-ctl'
+dependency 'infisical-cookbooks'
+dependency 'infisical-ctl'
 
-dependency "infisical-pg-ctl"
-dependency "infisical-cookbooks"
-dependency "infisical-ctl"
+dependency 'infisical-scripts'
+dependency 'postgresql'
+dependency 'pgbouncer'
+dependency 'patroni'
 
+dependency 'infisical'
 
-dependency "infisical-scripts"
-dependency "postgresql"
-dependency "pgbouncer"
-dependency "patroni"
-
-
-dependency "infisical"
-
-exclude "**/.git"
-exclude "**/bundler/git"
+exclude '**/.git'
+exclude '**/bundler/git'
 
 # don't ship static libraries or header files
 exclude 'embedded/lib/**/*.a'

@@ -68,7 +68,7 @@ module RedisHelper
     # recipes, they work on the `node` object, and can follow the regular
     # pattern (by initializing an object of the relevant
     # `RedisHelper::<Service>` class and calling the method). However, when
-    # used in libraries, they have to work on the `Gitlab` object, and should
+    # used in libraries, they have to work on the `Infisical` object, and should
     # be accessible as class methods (without having to create an object).
     # Hence, we make these methods class methods, with the config block they
     # work on being passed as an argument. Then the instance methods just call
@@ -103,11 +103,11 @@ module RedisHelper
       # independent of the Redis client service using them, and hence makes
       # sense to be just class methods
       def redis_master_role?
-        Gitlab['redis_master_role']['enable']
+        Infisical['redis_master_role']['enable']
       end
 
       def redis_replica_role?
-        Gitlab['redis_replica_role']['enable']
+        Infisicalcal['redis_replica_role']['enable']
       end
 
       def sentinel_daemon_enabled?
@@ -124,7 +124,7 @@ module RedisHelper
     end
 
     def gitlab_rb_attr
-      Gitlab[node_access_keys.last]
+      Infisical[node_access_keys.last]
     end
 
     def node_attr

@@ -68,46 +68,4 @@ class SecretsHelper
     end
   end
 
-  def self.gather_infisical_secrets # rubocop:disable Metrics/AbcSize
-    secret_tokens = {
-      'infisical_core' => {
-        'secret_key_base' => Infisical['infisical_core']['secret_key_base'],
-        'db_key_base' => Infisical['infisical_rails']['db_key_base'],
-        'otp_key_base' => Infisical['infisical_rails']['otp_key_base'],
-        'encrypted_settings_key_base' => Infisical['infisical_rails']['encrypted_settings_key_base'],
-        'openid_connect_signing_key' => Infisical['infisical_rails']['openid_connect_signing_key']
-      },
-      'letsencrypt' => {
-        'auto_enabled' => Infisical['letsencrypt']['auto_enabled']
-      },
-      'postgresql' => {
-        'internal_certificate' => Infisical['postgresql']['internal_certificate'],
-        'internal_key' => Infisical['postgresql']['internal_key']
-      }
-    }
-
-    if Infisical['mattermost']['infisical_enable']
-      infisical_oauth = {
-        'infisical_enable' => Infisical['mattermost']['infisical_enable'],
-        'infisical_secret' => Infisical['mattermost']['infisical_secret'],
-        'infisical_id' => Infisical['mattermost']['infisical_id']
-      }
-      secret_tokens['mattermost'].merge!(infisical_oauth)
-    end
-
-    secret_tokens
-  end
-
-  def self.write_to_infisical_secrets(path = SECRETS_FILE)
-    secret_tokens = gather_infisical_secrets
-
-    if File.directory?(File.dirname(path))
-      File.open(path, 'w', 0o600) do |f|
-        f.puts(Chef::JSONCompat.to_json_pretty(secret_tokens))
-        f.chmod(0o600)
-      end
-    end
-
-    nil
-  end
 end

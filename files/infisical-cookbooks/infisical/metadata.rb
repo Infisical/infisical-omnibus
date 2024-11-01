@@ -1,15 +1,15 @@
-name "infisical"
-maintainer "infisical.com"
-maintainer_email "support@infisical.com"
-license "Apache 2.0"
-description "Install and configure Infisical from Omnibus"
-long_description "Install and configure Infisical from Omnibus"
-version "0.0.1"
-recipe "infisical", "Configures Infisical from Omnibus"
+name 'infisical'
+maintainer 'infisical.com'
+maintainer_email 'support@infisical.com'
+license 'Apache 2.0'
+description 'Install and configure Infisical from Omnibus'
+long_description 'Install and configure Infisical from Omnibus'
+version '0.0.1'
+recipe 'infisical', 'Configures Infisical from Omnibus'
 
-supports "ubuntu"
+supports 'ubuntu'
 
-# depends "package"
+depends 'package'
 # depends 'logrotate'
 # depends 'postgresql'
 # depends 'redis'

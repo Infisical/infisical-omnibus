@@ -158,45 +158,7 @@ module SettingsDSL
     end
   end
 
-  def generate_secrets(_node_name, path = SecretsHelper::SECRETS_FILE)
-    # Infisical['node'][SecretsHelper::SKIP_GENERATE_SECRETS_CHEF_ATTR] is set to
-    # true  if we are calling from the 'infisical-ctrl generate-secrets' command
-    # and we are running the 'config(-ee)' recipe in which case we will generate
-    # secrets in the 'generate_secrets' recipe where it will then be set to
-    # false.
-    return if Infisical['node'][SecretsHelper::SKIP_GENERATE_SECRETS_CHEF_ATTR] == true
-
-    force_write_secrets = !Infisical['node'][SecretsHelper::SECRETS_FILE_CHEF_ATTR].nil?
-
-    # guards against creating secrets on non-bootstrap node
-    SecretsHelper.read_infisical_secrets(path)
-    generate_default_secrets = Infisical['package']['generate_default_secrets'] != false
-
-    Chef::Log.info('Generating default secrets') if generate_default_secrets
-    # Parse secrets using the handlers
-    sorted_settings.each do |_key, value|
-      handler = value.handler
-      handler.parse_secrets if handler.respond_to?(:parse_secrets) && generate_default_secrets
-      handler.validate_secrets if handler.respond_to?(:validate_secrets)
-    end
-
-    if Infisical['package']['generate_secrets_json_file'] == false && !force_write_secrets
-      return unless generate_default_secrets
-
-      warning_message = <<~EOS
-        You've enabled generating default secrets but have disabled writing them to #{path} file.
-        This results in secrets not persisting across `infisical-ctl reconfigure` runs and can cause issues with functionality.
-      EOS
-
-      LoggingHelper.warning(warning_message)
-    else
-      Chef::Log.info("Generating #{path} file")
-      SecretsHelper.write_to_infisical_secrets(path)
-    end
-  end
-
-  def generate_config(node_name)
-    generate_secrets(node_name)
+  def generate_config
     load_roles
     # Parse all our variables using the handlers
     sorted_settings.each do |_key, value|

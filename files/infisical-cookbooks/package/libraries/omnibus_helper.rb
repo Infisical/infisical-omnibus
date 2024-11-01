@@ -1,7 +1,6 @@
 require 'fileutils'
 require 'mixlib/shellout'
 require_relative 'helper'
-require_relative 'deprecations'
 
 class OmnibusHelper
   include ShellOutHelper

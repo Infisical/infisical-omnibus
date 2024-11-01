@@ -18,7 +18,7 @@ require 'chef/mash'
 
 # ConfigMash is a custom Mash based on Chef::Node::ViviMash
 # But it does not have the attribute and state tracking capabilities for use in a node
-# and only auto-vivifies when used within a block passed to Gitlab::ConfigMash.auto_vivify
+# and only auto-vivifies when used within a block passed to Infisical::ConfigMash.auto_vivify
 #
 # @see Chef::Node::VividMash
 # @see http://www.rubydoc.info/github/opscode/chef/Chef/Node/VividMash
@@ -49,7 +49,7 @@ module Infisical
     # When auto_vivify? is enable and the key does not exist it creates a new ConfigMash for that key
     #
     # @param [String] key
-    # @return [Gitlab::ConfigMash, Object]
+    # @return [Infisical::ConfigMash, Object]
     def [](key)
       value = super
 
@@ -64,8 +64,8 @@ module Infisical
     # Cast a Hash that is passed in to ConfigMash
     # this method is called from Mash.[]=
     #
-    # @param [Gitlab::ConfigMash, Hash, Object] value
-    # @return [Gitlab::ConfigMash, Array, Object] either a CofigMash when its a Hash or a ConfigMash or original value otherwise
+    # @param [Infisicalcal::ConfigMash, Hash, Object] value
+    # @return [Infisical::ConfigMash, Array, Object] either a CofigMash when its a Hash or a ConfigMash or original value otherwise
     def convert_value(value)
       if value.instance_of?(ConfigMash)
         value
@@ -81,7 +81,7 @@ module Infisical
     # @param [Array] keys
     # @param [Object] value
     def deep_set(*keys, value)
-      Gitlab::ConfigMash.auto_vivify do
+      Infisical::ConfigMash.auto_vivify do
         if keys.length == 1
           self[keys.first] = value
         else
