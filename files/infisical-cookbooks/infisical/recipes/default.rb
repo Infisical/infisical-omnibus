@@ -27,3 +27,5 @@ directory 'Create /var/log/infisical' do
   recursive true
   action :create
 end
+
+puts node['infisical']['infisical_core']['infisical_port']

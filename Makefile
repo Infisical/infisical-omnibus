@@ -1,4 +1,4 @@
-.PHONY: clean-up reset status
+.PHONY: clean-up reset status rebuild-cookbook
 
 clean-up:
 	dpkg -r infisical && \
@@ -11,3 +11,6 @@ reset:
 
 status:
 	systemctl status infisical
+
+rebuild-cookbooks:
+	yes | cp -rf ./files/infisical-cookbooks/* /opt/infisical/embedded/cookbooks

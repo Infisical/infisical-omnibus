@@ -107,7 +107,7 @@ module RedisHelper
       end
 
       def redis_replica_role?
-        Infisicalcal['redis_replica_role']['enable']
+        Infisical['redis_replica_role']['enable']
       end
 
       def sentinel_daemon_enabled?

@@ -19,14 +19,14 @@ require_relative '../helpers/services_helper'
 module Services
   class BaseServices < ::Services::Config
     # Define all infisical cookbook services
-    service 'logrotate', groups: [DEFAULT_GROUP, SYSTEM_GROUP]
     service 'infisical_core', groups: [DEFAULT_GROUP, 'infisical_role']
-    service 'redis',              groups: [DEFAULT_GROUP, 'redis', 'redis_node']
-    service 'postgresql',         groups: [DEFAULT_GROUP, 'postgres', 'postgres_role', 'patroni_role']
-    service 'nginx',              groups: [DEFAULT_GROUP, 'pages_role']
-    service 'pgbouncer',          groups: %w[postgres pgbouncer_role]
-    service 'patroni',            groups: %w[postgres patroni_role]
-    service 'consul',             groups: %w[consul_role ha pgbouncer_role patroni_role]
-    service 'sentinel',           groups: ['redis']
+    # service 'logrotate', groups: [DEFAULT_GROUP, SYSTEM_GROUP]
+    # service 'postgresql',         groups: [DEFAULT_GROUP, 'postgres', 'postgres_role', 'patroni_role']
+    # service 'redis',              groups: [DEFAULT_GROUP, 'redis', 'redis_node']
+    # service 'pgbouncer',          groups: %w[postgres pgbouncer_role]
+    # service 'nginx',              groups: [DEFAULT_GROUP, 'pages_role']
+    # service 'consul',             groups: %w[consul_role ha pgbouncer_role patroni_role]
+    # service 'patroni',            groups: %w[postgres patroni_role]
+    # service 'sentinel',           groups: ['redis']
   end
 end

@@ -191,6 +191,7 @@ module Services
     def enabled?(service)
       return false unless exist?(service)
 
+      puts service_list
       user_config = Infisical[service]['enable']
 
       return user_config unless user_config.nil?
