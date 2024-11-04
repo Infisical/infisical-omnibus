@@ -5,6 +5,7 @@ logging_settings = logfiles_helper.logging_settings('infisical_core')
 user_name = account_helper.infisical_core_user.to_s
 user_group = account_helper.infisical_core_group.to_s
 service_name = 'infisical_core'
+infisical_core_env_dir = node['infisical']['infisical_core']['env_dir']
 
 # Ensure the infisical user exists
 user user_name do
@@ -81,6 +82,11 @@ node['infisical']['infisical_core'].each do |key, value|
   end
 end
 
+env_dir infisical_core_env_dir do
+  variables infisical_core_env
+  notifies :restart, 'runit_service[infisical_core]'
+end
+
 runit_service service_name do
   options({
             log_directory: logging_settings[:log_directory],
@@ -88,7 +94,7 @@ runit_service service_name do
             log_group: logging_settings[:runit_group],
             user: user_name,
             groupname: user_group,
-            env_vars: infisical_core_env
+            env_dir: infisical_core_env_dir
           })
   owner user_name
   group user_group
