@@ -19,36 +19,8 @@ directory 'Create /var/opt/infisical' do
   action :create
 end
 
-directory 'Create /var/log/infisical' do
-  path '/var/log/infisical'
-  owner 'root'
-  group 'root'
-  mode '0755'
-  recursive true
-  action :create
-end
-
-directory 'Create /var/log/infisical/consul' do
-  path '/var/log/infisical/consul'
-  owner 'root'
-  group 'root'
-  mode '0755'
-  recursive true
-  action :create
-end
-
 include_recipe 'package::runit'
 
 include_recipe 'package::sysctl'
 
-runit_service 'consul' do
-  options({
-            log_directory: '/var/log/infisical/consul',
-            log_user: 'root',
-            log_group: 'root'
-          })
-  owner 'root'
-  group 'root'
-  supervisor_owner 'root'
-  supervisor_group 'root'
-end
+include_recipe 'infisical::infisical_core'

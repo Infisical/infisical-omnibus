@@ -22,11 +22,11 @@ class AccountHelper
     @node = node
   end
 
-  def gitlab_user
+  def infisical_core_user
     node['infisical']['user']['username']
   end
 
-  def gitlab_group
+  def infisical_core_group
     node['infisical']['user']['group']
   end
 
@@ -88,7 +88,7 @@ class AccountHelper
 
   def users
     %W[
-      #{gitlab_user}
+      #{infisical_core_user}
       #{web_server_user}
       #{redis_user}
       #{postgresql_user}
@@ -101,7 +101,7 @@ class AccountHelper
 
   def groups
     %W[
-      #{gitlab_group}
+      #{infisical_core_group}
       #{web_server_group}
       #{redis_group}
       #{postgresql_group}

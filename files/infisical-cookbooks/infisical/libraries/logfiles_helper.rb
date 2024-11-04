@@ -24,41 +24,7 @@ class LogfilesHelper < AccountHelper
     # to add a service here.
     # https://infisical.com/infisical-org/omnibus-infisical/issues/4606
     {
-      'alertmanager' => { username: prometheus_user, group: prometheus_user },
-      'consul' => { username: consul_user, group: consul_group, mode: '0755' },
-      'crond' => { username: 'root', group: 'root' },
-      'geo-logcursor' => { username: gitlab_user, group: gitlab_group },
-      'geo-postgresql' => { username: postgresql_user, group: postgresql_group },
-      'gitaly' => { username: gitlab_user, group: gitlab_group },
-      'infisical-exporter' => { username: gitlab_user, group: gitlab_group },
-      'infisical-pages' => { username: gitlab_user, group: gitlab_group },
-      'infisical-kas' => { username: gitlab_user, group: gitlab_group },
-      'infisical-rails' => { username: gitlab_user, group: gitlab_group },
-      'infisical-shell' => { username: gitlab_user, group: gitlab_group },
-      'infisical-sshd' => { username: gitlab_user, group: gitlab_group },
-      'infisical-workhorse' => { username: gitlab_user, group: gitlab_group },
-      'logrotate' => { username: 'root', group: 'root' },
-      'mailroom' => { username: gitlab_user, group: gitlab_group },
-      'mattermost' => { username: mattermost_user, group: mattermost_group, mode: '0755' },
-      'nginx' => { username: 'root', group: 'root' },
-      'node-exporter' => { username: prometheus_user, group: prometheus_group },
-      'patroni' => { username: postgresql_user, group: postgresql_group },
-      'pgbouncer' => { username: postgresql_user, group: postgresql_group },
-      'pgbouncer-exporter' => { username: postgresql_user, group: postgresql_group },
-      'postgres-exporter' => { username: postgresql_user, group: postgresql_group },
-      'postgresql' => { username: postgresql_user, group: postgresql_group },
-      'praefect' => { username: gitlab_user, group: gitlab_group },
-      'prometheus' => { username: prometheus_user, group: prometheus_group },
-      'puma' => { username: gitlab_user, group: gitlab_group },
-      'redis' => { username: redis_user, group: redis_group },
-      'redis-exporter' => { username: redis_user, group: redis_group },
-      'registry' => { username: registry_user, group: registry_group },
-      'remote-syslog' => { username: 'root', group: 'root' },
-      'sidekiq' => { username: gitlab_user, group: gitlab_group },
-      'storage-check' => { username: gitlab_user, group: gitlab_group },
-      'sentinel' => { username: redis_user, group: redis_group },
-      'spamcheck' => { username: gitlab_user, group: gitlab_group },
-      'spam-classifier' => { username: gitlab_user, group: gitlab_group }
+      'infisical_core' => { username: infisical_core_user, group: infisical_core_group }
     }
   end
 
