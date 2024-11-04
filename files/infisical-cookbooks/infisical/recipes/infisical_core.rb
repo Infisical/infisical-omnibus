@@ -15,40 +15,19 @@ user user_name do
   action :create
 end
 
-# Define paths that require ownership by 'infisical'
-infisical_paths = [
-  '/opt/infisical/server/frontend-build/scripts',
-  '/opt/infisical/server/frontend-build/public/data',
-  '/opt/infisical/server/frontend-build/.next',
-  '/opt/infisical/server/standalone-entrypoint.sh'
-]
-
-# Set ownership of the specified directories to 'infisical:infisical'
-infisical_paths.each do |path|
-  directory path do
-    owner user_name
-    group user_group
-    recursive true
-    action :create
-  end
+execute 'chown infisical core' do
+  command "chown -R #{user_group}:#{user_group} /opt/infisical/server/frontend-build/scripts /opt/infisical/server/frontend-build/public/data /opt/infisical/server/frontend-build/.next /opt/infisical/server/standalone-entrypoint.sh"
+  user 'root'
 end
 
-# Set permissions for specific directories and files
-directory '/opt/infisical/server/frontend-build/scripts' do
-  mode '0555'
-  recursive true
-  action :create
+execute 'chmod infisical core' do
+  command 'chmod -R 555 /opt/infisical/server/frontend-build/scripts  /opt/infisical/server/standalone-entrypoint.sh'
+  user 'root'
 end
 
-file '/opt/infisical/server/standalone-entrypoint.sh' do
-  mode '0555'
-  action :create
-end
-
-directory '/opt/infisical/server/frontend-build/.next' do
-  mode '0755'
-  recursive true
-  action :create
+execute 'chmod infisical frontend' do
+  command 'chmod -R 755 /opt/infisical/server/frontend-build/.next'
+  user 'root'
 end
 
 # Set executable permissions on node, npm, and npx binaries
@@ -81,7 +60,7 @@ file '/usr/sbin/update-ca-certificates' do
 end
 
 directory "Create /var/log/infisical/#{service_name}" do
-  path "/var/log/infisical/#{service_name}"
+  path logging_settings[:log_directory]
   owner user_name
   group user_group
   mode '0755'
@@ -90,7 +69,7 @@ directory "Create /var/log/infisical/#{service_name}" do
 end
 
 infisical_core_env = {
-  PATH => "#{ENV['PATH']}:/opt/#{service_name}/embedded/bin"
+  'PATH' => "#{ENV['PATH']}:/opt/#{service_name}/embedded/bin"
 }
 
 # Iterate through each key-value pair in node['infisical']['user']
@@ -98,9 +77,21 @@ node['infisical']['infisical_core'].each do |key, value|
   # Check if the key is fully capitalized and the value is not nil
   if key == key.upcase && !value.nil?
     # Add the key-value pair to the hash
-    infisical_core_env[key] = value
+    infisical_core_env[key] = value.to_s
   end
 end
 
-puts 'env'
-puts infisical_core_env
+runit_service service_name do
+  options({
+            log_directory: logging_settings[:log_directory],
+            log_user: logging_settings[:runit_user],
+            log_group: logging_settings[:runit_group],
+            user: user_name,
+            groupname: user_group
+          })
+  env infisical_core_env
+  owner user_name
+  group user_group
+  supervisor_owner 'root'
+  supervisor_group 'root'
+end
