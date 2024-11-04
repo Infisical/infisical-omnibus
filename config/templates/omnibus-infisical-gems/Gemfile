@@ -20,8 +20,8 @@ gem 'unf_ext', '0.0.9.1'
 # testing stays consistent with the package contents.
 source 'https://packagecloud.io/cinc-project/stable' do
   gem 'chef', '18.3.0'
-  gem 'chef-cli', '5.6.14'
   gem 'chef-bin', '18.3.0'
+  gem 'chef-cli', '5.6.14'
   gem 'chef-config', '18.3.0'
   gem 'chef-zero', '15.0.11'
   gem 'inspec-core', '6.6.0'
@@ -32,17 +32,17 @@ gem 'ohai', '18.1.18'
 # Currently omnibus-ctl is installed via config/software since we build
 # a custom version from the Git source for licensing reasons and for Ruby 3.2 fixes.
 gem 'acme-client', '2.0.19'
-gem 'rainbow', '3.1.1'
 gem 'gitlab-ruby-shadow', '2.5.1', require: 'shadow'
-gem 'tomlib', '0.6.0'
 gem 'mixlib-log', '3.0.9'
+gem 'rainbow', '3.1.1'
 gem 'remote_syslog', '1.6.15'
+gem 'tomlib', '0.6.0'
 
 # pin the version of faraday and faraday-net_http temporarily until
 # conflicts between the version of net-http it requires and the version of
 # net-http shipped in the Gemfile can be resolved
-gem 'faraday-net_http', '3.0.2'
 gem 'faraday', '2.8.1'
+gem 'faraday-net_http', '3.0.2'
 
 # Temporary workaround because upstream inspec-core does not list this as
 # a requirement and it causes failures during gitlab-ctl reconfigure in
