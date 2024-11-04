@@ -25,7 +25,8 @@ skip_transitive_dependency_licensing true
 dependency 'ruby'
 
 build do
-  patch source: "license/add-license-file.patch"
+  patch source: 'license/add-license-file.patch' unless File.exist?("#{project_dir}/LICENSE.txt")
+
   env = with_standard_compiler_flags(with_embedded_path)
 
   gem "update --no-document --system #{version}", env: env

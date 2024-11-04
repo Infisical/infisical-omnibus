@@ -30,43 +30,43 @@ module Infisical
   ## Roles
 
   # Roles that depend on gitlab_rails['enable'] should be processed first
-  role('application').use { ApplicationRole }
-  role('postgres').use { PostgresRole }
-  role('patroni').use { PatroniRole }
-  role('redis_sentinel').use { RedisSentinelRole }
-  role('redis_master').use { RedisMasterRole }
-  role('redis_replica')
-  role('pgbouncer').use { PgbouncerRole }
-  role('consul').use { ConsulRole }
+  # role('application').use { ApplicationRole }
+  # role('postgres').use { PostgresRole }
+  # role('patroni').use { PatroniRole }
+  # role('redis_sentinel').use { RedisSentinelRole }
+  # role('redis_master').use { RedisMasterRole }
+  # role('redis_replica')
+  # role('pgbouncer').use { PgbouncerRole }
+  # role('consul').use { ConsulRole }
 
   ## Attributes directly on the node
-  attribute('package').use { Package }
-  attribute('redis',        priority: 20).use { Redis }
-  attribute('postgresql',   priority: 20).use { Postgresql }
-  attribute('pgbouncer')
+  # attribute('package').use { Package }
+  # attribute('redis',        priority: 20).use { Redis }
+  # attribute('postgresql',   priority: 20).use { Postgresql }
+  # attribute('pgbouncer')
   # attribute('consul').use { Consul }
-  attribute('patroni').use { Patroni }
+  # attribute('patroni').use { Patroni }
   # attribute('letsencrypt', priority: 17).use { LetsEncrypt } # After GitlabRails, but before Registry and Mattermost
-  attribute('logrotate')
+  # attribute('logrotate')
 
   ## Attributes under node['infisical']
   attribute_block 'infisical' do
     # attribute('sentinel').use { Sentinel }
     attribute('infisical_core', priority: 15).use { InfisicalCore } # Parse infisical first as others may depend on it
-    attribute('logging', priority: 20).use { Logging }
+    # attribute('logging', priority: 20).use { Logging }
     # Parse nginx last so all external_url are parsed before it
     # attribute('nginx', priority: 40).use do
     #   Nginx
     # end
-    attribute('external_url',            default: nil)
-    attribute('registry_external_url',   default: nil)
-    attribute('runtime_dir',             default: nil)
+    # attribute('external_url',            default: nil)
+    # attribute('registry_external_url',   default: nil)
+    # attribute('runtime_dir',             default: nil)
     # attribute('bootstrap')
-    attribute('user')
-    attribute('pages_nginx')
-    attribute('registry_nginx')
-    attribute('remote_syslog')
-    attribute('high_availability')
+    # attribute('user')
+    # attribute('pages_nginx')
+    # attribute('registry_nginx')
+    # attribute('remote_syslog')
+    # attribute('high_availability')
     # attribute('web_server')
   end
 end

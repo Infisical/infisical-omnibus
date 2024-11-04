@@ -9,7 +9,7 @@ skip_transitive_dependency_licensing true
 dependency 'omnibus-ctl'
 
 
-source path: File.expand_path('files/infisical-ctl-commands', Omnibus::Config.project_root)
+# source path: File.expand_path('files/infisical-ctl-commands', Omnibus::Config.project_root)
 
 build do
   mkdir "#{install_dir}/bin/"
@@ -40,5 +40,5 @@ fi
   end
   command "chmod 755 #{install_dir}/bin/infisical-ctl"
   # additional omnibus-ctl commands
-  sync './', "#{install_dir}/embedded/service/omnibus-ctl/"
+  # sync './', "#{install_dir}/embedded/service/omnibus-ctl/"
 end

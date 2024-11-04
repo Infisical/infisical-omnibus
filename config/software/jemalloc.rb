@@ -23,11 +23,12 @@ license_file 'COPYING'
 
 skip_transitive_dependency_licensing true
 
-source github: "jemalloc/jemalloc"
-relative_path "jemalloc"
+source github: 'jemalloc/jemalloc'
+relative_path 'jemalloc'
 
 # Ensure redis is compiled first so it can build its own jemalloc
-dependency 'redis'
+# TODO(akhilmhdh): Think about this later
+# dependency 'redis'
 
 env = with_standard_compiler_flags(with_embedded_path)
 
@@ -56,4 +57,4 @@ build do
   make "-j #{workers} install", env: env
 end
 
-project.exclude "embedded/bin/jemalloc-config"
+project.exclude 'embedded/bin/jemalloc-config'

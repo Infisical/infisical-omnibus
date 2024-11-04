@@ -5,8 +5,8 @@
 #
 
 name 'infisical'
-maintainer 'CHANGE ME'
-homepage 'https://CHANGE-ME.com'
+maintainer 'infisical'
+homepage 'https://infisical.com'
 
 # Defaults to C:/infisical on Windows
 # and /opt/infisical on all other platforms
@@ -32,20 +32,20 @@ dependency 'preparation'
 # infisical dependencies/components
 
 dependency 'omnibus-infisical-gems'
-dependency 'redis'
-dependency 'jemalloc'
-dependency 'logrotate'
+# dependency 'redis'
+# dependency 'jemalloc'
+# dependency 'logrotate'
 dependency 'runit'
-dependency 'consul'
+# dependency 'consul'
 
-dependency 'infisical-pg-ctl'
+# dependency 'infisical-pg-ctl'
 dependency 'infisical-cookbooks'
 dependency 'infisical-ctl'
 
 dependency 'infisical-scripts'
-dependency 'postgresql'
-dependency 'pgbouncer'
-dependency 'patroni'
+# dependency 'postgresql'
+# dependency 'pgbouncer'
+# dependency 'patroni'
 
 dependency 'infisical'
 

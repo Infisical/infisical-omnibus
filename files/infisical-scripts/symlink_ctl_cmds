@@ -5,10 +5,10 @@ DEST_DIR=${1:-/opt/infisical}
 
 usr_bin_symlinks=(
   "${DEST_DIR}/bin/infisical-ctl"
-  "${DEST_DIR}/bin/infisical-psql"
-  "${DEST_DIR}/embedded/bin/infisical-pg-ctl"
-  "${DEST_DIR}/bin/infisical-redis-cli"
-  "${DEST_DIR}/bin/infisical-backup-cli"
+  # "${DEST_DIR}/bin/infisical-psql"
+  # "${DEST_DIR}/embedded/bin/infisical-pg-ctl"
+  # "${DEST_DIR}/bin/infisical-redis-cli"
+  # "${DEST_DIR}/bin/infisical-backup-cli"
 )
 
 error_exit()
