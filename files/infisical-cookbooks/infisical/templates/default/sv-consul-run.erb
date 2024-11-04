@@ -1,0 +1,13 @@
+#!/bin/bash
+set -e # fail on errors
+
+# Redirect stderr -> stdout
+exec 2>&1
+
+exec  /opt/infisical/embedded/bin/chpst -P -U root:<%= @options[:log_group] %>  -u root:root bash -c "
+    while true; do
+        echo \"Hello World\" >> \"/var/log/test\"
+        echo \"Hello World\"
+        sleep 5
+    done
+"
