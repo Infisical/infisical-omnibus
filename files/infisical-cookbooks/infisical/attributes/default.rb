@@ -30,6 +30,7 @@ default['infisical']['infisical_core']['enable'] = true
 default['infisical']['infisical_core']['dir'] = '/var/opt/infisical/infisical-core'
 default['infisical']['infisical_core']['log_directory'] = '/var/log/infisical/infisical-core'
 default['infisical']['infisical_core']['environment'] = 'production'
+default['infisical']['infisical_core']['env_dir'] = '/opt/infisical/etc/infisical_core/env'
 
 default['infisical']['infisical_core']['ENCRYPTION_KEY'] = nil
 default['infisical']['infisical_core']['AUTH_SECRET'] = nil

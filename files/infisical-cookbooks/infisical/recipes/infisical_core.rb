@@ -87,9 +87,9 @@ runit_service service_name do
             log_user: logging_settings[:runit_user],
             log_group: logging_settings[:runit_group],
             user: user_name,
-            groupname: user_group
+            groupname: user_group,
+            env_vars: infisical_core_env
           })
-  env infisical_core_env
   owner user_name
   group user_group
   supervisor_owner 'root'

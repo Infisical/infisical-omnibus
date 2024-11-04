@@ -2,4 +2,4 @@
 exec /opt/infisical/embedded/bin/chpst -P \
   -U root:<%= @options[:log_group] || 'root' %> \
   -u root:<%= @options[:log_group] || 'root' %> \
-    /opt/infisical/embedded/bin/svlogd <%= @options[:log_directory] %>
+    svlogd <%= @options[:log_directory] %>

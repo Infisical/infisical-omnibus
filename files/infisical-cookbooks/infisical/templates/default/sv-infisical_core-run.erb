@@ -6,4 +6,8 @@ exec 2>&1
 
 cd '/opt/infisical/server'
 
-exec  /opt/infisical/embedded/bin/chpst -P -U <%= @options[:user] %>:<%= @options[:groupname] %>  -u <%= @options[:user] %>:<%= @options[:groupname] %> ./standalone-entrypoint.sh
+<% @options[:env_vars].each do |key, value| %>
+    export <%= key %>="<%= value %>"
+<% end %>
+
+exec  chpst -e <%= @options[:env_dir] %> -P  -U <%= @options[:user] %>:<%= @options[:groupname] %>  -u <%= @options[:user] %>:<%= @options[:groupname] %> ./standalone-entrypoint.sh
