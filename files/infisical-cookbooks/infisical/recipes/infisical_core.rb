@@ -6,6 +6,7 @@ user_name = account_helper.infisical_core_user.to_s
 user_group = account_helper.infisical_core_group.to_s
 service_name = 'infisical_core'
 infisical_core_env_dir = node['infisical']['infisical_core']['env_dir']
+should_auto_migrate = node['infisical']['infisical_core']['auto_migration']
 
 # Ensure the infisical user exists
 user user_name do
@@ -70,7 +71,10 @@ directory "Create /var/log/infisical/#{service_name}" do
 end
 
 infisical_core_env = {
-  'PATH' => "#{ENV['PATH']}:/opt/#{service_name}/embedded/bin"
+  'PATH' => "#{ENV['PATH']}:/opt/#{service_name}/embedded/bin",
+  'NODE_ENV' => 'production',
+  'STANDALONE_BUILD' => 'true',
+  'STANDALONE_MODE' => 'true'
 }
 
 # Iterate through each key-value pair in node['infisical']['user']
@@ -79,6 +83,15 @@ node['infisical']['infisical_core'].each do |key, value|
   if key == key.upcase && !value.nil?
     # Add the key-value pair to the hash
     infisical_core_env[key] = value.to_s
+  end
+end
+
+if should_auto_migrate
+  execute 'Run database auto migration' do
+    command 'npm run migration:latest'
+    environment infisical_core_env
+    cwd '/opt/infisical/server'
+    user 'root'
   end
 end
 
