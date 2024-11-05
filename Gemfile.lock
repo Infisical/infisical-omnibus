@@ -435,6 +435,7 @@ DEPENDENCIES
   kitchen-vagrant
   omnibus (~> 9.0)
   omnibus-software!
+  rubocop
   test-kitchen
 
 BUNDLED WITH

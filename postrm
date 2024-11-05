@@ -1,0 +1,28 @@
+#!/bin/bash
+#
+# Perform necessary infisical cleanup steps after package is uninstalled.
+#
+
+PROGNAME=$(basename $0)
+
+error_exit()
+{
+  echo "${PROGNAME}: ${1:-"Unknown Error"}" 1>&2
+  exit 1
+}
+
+# Stop and disable service
+systemctl stop infisical >/dev/null 2>&1
+systemctl disable infisical >/dev/null 2>&1
+rm -f /etc/systemd/system/infisical.service
+systemctl daemon-reload
+
+# Remove logs directory
+rm -rf /var/log/infisical
+
+rm -rf /opt/infisical
+
+# Remove fastify user
+userdel fastify >/dev/null 2>&1
+
+exit 0

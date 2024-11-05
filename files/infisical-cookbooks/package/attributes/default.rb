@@ -1,0 +1,45 @@
+# Copyright:: Copyright (c) 2017 GitLab Inc
+# License:: Apache License, Version 2.0
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+
+# Package attributes
+
+# Default location of install-dir is /opt/infisical.
+# DO NOT change this value unless you are building your own GitLab packages
+default['package']['install-dir'] = '/opt/infisical'
+default['package']['detect_init'] = true
+default['package']['modify_kernel_parameters'] = true
+default['package']['systemd_tasks_max'] = 4915
+
+default['package']['systemd_wanted_by'] = 'multi-user.target'
+default['package']['systemd_after'] = 'multi-user.target'
+
+default['package']['generate_default_secrets'] = true
+default['package']['generate_secrets_json_file'] = true
+
+# We only want to generate the public attributes file on specific calls to Chef.
+# Normally, you will not want to change this
+default['package']['public_attributes'] = false
+
+# Setting runit defaults here so that they can be made available automatically
+# to cookbooks of individual services via depends in metadata.rb
+default['runit']['sv_bin'] = '/opt/infisical/embedded/bin/sv'
+default['runit']['chpst_bin'] = '/opt/infisical/embedded/bin/chpst'
+default['runit']['service_dir'] = '/opt/infisical/service'
+default['runit']['sv_dir'] = '/opt/infisical/sv'
+default['runit']['lsb_init_dir'] = '/opt/infisical/init'
+
+# SELinux Policy options to assist with transition to unified policy
+default['package']['selinux_policy_version'] = nil

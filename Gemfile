@@ -16,6 +16,7 @@ group :development do
   gem 'berkshelf'
 
   # Use Test Kitchen with Vagrant for converging the build environment
-  gem 'test-kitchen'
   gem 'kitchen-vagrant'
+  gem 'rubocop'
+  gem 'test-kitchen'
 end

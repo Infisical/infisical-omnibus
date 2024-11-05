@@ -1,28 +1,38 @@
-#!/bin/bash
+#!/bin/sh
+# WARNING: REQUIRES /bin/sh
 #
-# Perform necessary infisical cleanup steps after package is uninstalled.
-#
+# - must run on /bin/sh on Solaris 9
+# - must run on /bin/sh on AIX 6.x
+# - if you think you are a bash wizard, you probably do not understand
+#   this programming language. Do not touch.
+# - if you are under 40, get peer review from your elders.
+# - akhilmhdh: Sorry, everyone is under 40 now. T-T
 
-PROGNAME=$(basename $0)
-
-error_exit()
-{
-  echo "${PROGNAME}: ${1:-"Unknown Error"}" 1>&2
-  exit 1
+is_smartos() {
+  uname -v | grep "^joyent" >/dev/null 2>&1
 }
 
-# Stop and disable service
-systemctl stop infisical >/dev/null 2>&1
-systemctl disable infisical >/dev/null 2>&1
-rm -f /etc/systemd/system/infisical.service
-systemctl daemon-reload
+if is_smartos; then
+  PREFIX="/opt/local"
+else
+  PREFIX="/usr"
+fi
 
-# Remove logs directory
-rm -rf /var/log/infisical
+cleanup_symlinks() {
+  # binaries="gitlab-ctl gitlab-psql gitlab-backup"
+  binaries="infisical-ctl"
+  for binary in $binaries; do
+    rm -f "$PREFIX/bin/$binary"
+  done
+}
 
-rm -rf /opt/infisical
+# Clean up binary symlinks if they exist
+# see: http://tickets.opscode.com/browse/CHEF-3022
 
-# Remove fastify user
-userdel fastify >/dev/null 2>&1
-
-exit 0
+if [ ! -f /etc/redhat-release ] && [ ! -f /etc/fedora-release ] && [ ! -f /etc/system-release ]; then
+  # not a RedHat-ish RPM-based system
+  cleanup_symlinks
+elif [ "x$1" = "x0" ]; then
+  # RPM-based system and we're deinstalling rather than upgrading
+  cleanup_symlinks
+fi
