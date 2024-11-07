@@ -1,0 +1,94 @@
+FROM ubuntu:22.04 AS base
+RUN apt-get update -q \
+    && apt-get install -y \
+    autoconf \
+    g++ \
+    gcc \
+    git \
+    make \
+    curl \
+    zlib1g-dev \
+    libssl-dev \
+    locales \
+    xz-utils \
+    && apt-get autoremove -yq \
+    && apt-get clean -yqq \
+    && rm -rf /var/lib/apt/lists/*
+
+    
+RUN apt-get update -q \
+  && DEBIAN_FRONTEND=noninteractive apt-get install -yq --no-install-recommends \
+       build-essential \
+       autoconf \
+       automake \
+       autopoint \
+       byacc \
+       clang \
+       libclang-dev \
+       libyaml-dev \
+       libffi-dev \
+       libkrb5-dev \
+       libreadline-dev \
+       libgdbm-dev \
+       libncurses5-dev \
+       llvm-dev \
+       bzip2 \
+       libcurl4-openssl-dev \
+       ca-certificates \
+       openssh-server \
+       libexpat1-dev \
+       gettext \
+       libz-dev \
+       fakeroot \
+       ccache \
+       distcc \
+       unzip \
+       tzdata \
+       apt-transport-https \
+       gnupg \
+       pkg-config \
+       python3 \
+       file
+
+# Set locale (optional)
+RUN locale-gen en_US.UTF-8
+ENV LANG=en_US.UTF-8
+ENV LANGUAGE=en_US:en
+ENV LC_ALL=en_US.UTF-8
+
+# Install Ruby and Bundler from Ubuntu's repository
+RUN apt-get update -q \
+    && apt-get install -y ruby-full \
+    && gem install bundler \
+    && apt-get clean -yqq \
+    && rm -rf /var/lib/apt/lists/*
+
+# Confirm installations
+RUN ruby -v \
+    && gem -v \
+    && bundler -v
+
+
+# Install Omnibus gem
+RUN gem install omnibus
+
+# Copy the Omnibus project files into the container
+COPY ./ /omnibus-project
+
+# Set the working directory
+WORKDIR /omnibus-project
+
+RUN bundle install --binstubs
+
+
+FROM ubuntu:22.04
+
+COPY --from=base / /
+
+# Set the working directory
+WORKDIR /omnibus-project
+
+RUN chmod +x ./build.sh
+RUN bash ./build.sh
+
+CMD ["echo", "success"]

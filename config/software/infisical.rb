@@ -23,7 +23,6 @@ build do
       copy "#{Dir.pwd}/../standalone-entrypoint.sh", "#{install_dir}/server"
 
       # after build we need only prod node_modules. So we recreate it
-      command "ls -a #{install_dir}/server"
       command 'npm ci --only-production', env: env, cwd: "#{install_dir}/server"
     end
   end
@@ -52,5 +51,5 @@ build do
     end
   end
 
-  whitelist_file(/-musl.node/)
+  # whitelist_file(/-musl.node/)
 end

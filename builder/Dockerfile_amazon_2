@@ -1,0 +1,75 @@
+FROM amazonlinux:2023 AS base
+
+RUN yum update -y -q \
+    && yum install -y \
+    perl-FindBin \
+    && yum groupinstall -y "Development Tools" \
+    && yum install -y --allowerasing \
+    curl \
+    libcurl-devel \
+    glibc-locale-source \
+    hostname \
+    gnupg2 \
+    pinentry-tty \
+    which \
+    && yum mark install -y \
+    perl-lib \
+    && yum clean all
+
+RUN yum update -y -q \
+    && yum install -y \
+    clang-devel \
+    curl-devel \
+    expat-devel \
+    krb5-devel \
+    perl-devel \
+    libyaml-devel \
+    libffi-devel \
+    readline-devel \
+    gdbm-devel \
+    ncurses-devel \
+    libgpg-error-devel \
+    libassuan-devel \
+    file \
+    selinux-policy-devel \
+    perl-IPC-Cmd \
+    && yum clean all
+
+ENV LANG C.UTF-8
+ENV LC_ALL C.UTF-8
+RUN localedef -c -f UTF-8 -i C C.UTF-84
+
+# Install Ruby and Bundler
+RUN yum install -y ruby \
+    ruby-devel \
+    && gem install bundler \
+    && yum clean all
+
+# Confirm installations
+RUN ruby -v \
+    && gem -v \
+    && bundler -v
+
+# Install Omnibus gem
+RUN gem install omnibus
+
+# Copy the Omnibus project files into the container
+COPY ./ /omnibus-project
+
+# Set the working directory
+WORKDIR /omnibus-project
+
+RUN bundle install --binstubs
+
+# Second stage
+FROM amazonlinux:2023
+
+COPY --from=base / /
+
+# Set the working directory
+WORKDIR /omnibus-project
+
+RUN chmod +x ./build.sh
+RUN bash ./build.sh
+
+CMD ["echo", "success"]

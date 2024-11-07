@@ -23,6 +23,7 @@
 # build_dir     './local/omnibus/build'
 # package_dir   './local/omnibus/pkg'
 # package_tmp   './local/omnibus/pkg-tmp'
+health_check false
 
 # Disable git caching
 # ------------------------------

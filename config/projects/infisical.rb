@@ -1,7 +1,17 @@
+# Copyright:: Copyright (c) 2017 GitLab Inc
+# License:: Apache License, Version 2.0
 #
-# Copyright 2024 YOUR NAME
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
 #
-# All Rights Reserved.
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
 #
 
 name 'infisical'
@@ -52,10 +62,7 @@ dependency 'infisical'
 exclude '**/.git'
 exclude '**/bundler/git'
 
-# don't ship static libraries or header files
-exclude 'embedded/lib/**/*.a'
-exclude 'embedded/lib/**/*.la'
-exclude 'embedded/include'
+exclude '**/node_modules/@fastify/static/test/**'
 
 # exclude manpages and documentation
 exclude 'embedded/man'
@@ -119,18 +126,6 @@ exclude 'embedded/lib/ruby/gems/*/gems/*/sample'
 exclude 'embedded/lib/ruby/gems/*/gems/*/script'
 exclude 'embedded/lib/ruby/gems/*/gems/*/t'
 
-# Exclude additional files from specific gems
-exclude 'embedded/lib/ruby/gems/*/gems/grpc-*/include'
-exclude 'embedded/lib/ruby/gems/*/gems/grpc-*/src/core'
-exclude 'embedded/lib/ruby/gems/*/gems/grpc-*/src/ruby/ext'
-exclude 'embedded/lib/ruby/gems/*/gems/grpc-*/src/ruby/spec'
-exclude 'embedded/lib/ruby/gems/*/gems/grpc-*/third_party'
-exclude 'embedded/lib/ruby/gems/*/gems/nokogumbo-*/ext'
-exclude 'embedded/lib/ruby/gems/*/gems/rbtrace-*/ext/src'
-exclude 'embedded/lib/ruby/gems/*/gems/rbtrace-*/ext/dst'
-exclude 'embedded/lib/ruby/gems/*/gems/re2-*/ports'
-exclude 'embedded/lib/ruby/gems/*/gems/*pg_query-*/ext'
-
 # Exclude exe files from Python libraries
 exclude 'embedded/lib/python*/**/*.exe'
 # Exclude whl files from Python libraries.
@@ -140,3 +135,26 @@ exclude 'embedded/lib/python*/**/*.whl'
 exclude 'embedded/lib/python*/**/*.dist-info'
 exclude 'embedded/lib/python*/**/*.egg-info'
 exclude 'embedded/lib/python*/**/__pycache__'
+
+# Enable signing packages
+package :rpm do
+  vendor 'Infisical, Inc. <support@infisical.com>'
+
+  # Enable XZ compression if selected
+  compress_xz = Infisical::Util.get_env('COMPRESS_XZ') || 'true'
+  if compress_xz == 'true'
+    compression_type :xz
+    compression_level 6
+  end
+end
+
+package :deb do
+  vendor 'Infisical, Inc. <support@infisical.com>'
+
+  # Enable XZ compression if selected
+  compress_xz = Infisical::Util.get_env('COMPRESS_XZ') || 'true'
+  if compress_xz == 'true'
+    compression_type :xz
+    compression_level 6
+  end
+end
