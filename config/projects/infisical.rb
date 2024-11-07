@@ -27,7 +27,7 @@ require "#{Omnibus::Config.project_root}/lib/infisical/util"
 require "#{Omnibus::Config.project_root}/lib/infisical/ohai_helper.rb"
 require "#{Omnibus::Config.project_root}/lib/infisical/build/check.rb"
 
-build_version Omnibus::BuildVersion.semver
+build_version Build.version
 build_iteration 1
 
 replace         'infisical'
