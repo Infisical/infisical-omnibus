@@ -24,6 +24,7 @@
 # package_dir   './local/omnibus/pkg'
 # package_tmp   './local/omnibus/pkg-tmp'
 health_check false
+append_timestamp false
 
 # Disable git caching
 # ------------------------------
@@ -49,8 +50,3 @@ health_check false
 # ------------------------------
 # software_gems ['omnibus-software', 'my-company-software']
 # local_software_dirs ['/path/to/local/software']
-
-# Windows architecture defaults
-# ------------------------------
-windows_arch   %w{x86 x64}.include?((ENV['OMNIBUS_WINDOWS_ARCH'] || '').downcase) ?
-                 ENV['OMNIBUS_WINDOWS_ARCH'].downcase.to_sym : :x86

@@ -14,7 +14,7 @@
 # limitations under the License.
 #
 
-name 'infisical'
+name 'infisical-core'
 maintainer 'infisical'
 homepage 'https://infisical.com'
 
