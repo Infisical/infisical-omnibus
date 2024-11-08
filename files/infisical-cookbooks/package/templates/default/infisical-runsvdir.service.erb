@@ -3,7 +3,7 @@ Description=Infisical Runit supervision process
 After=<%= @systemd_after %>
 
 [Service]
-ExecStart=/opt/infisical/embedded/bin/runsvdir-start
+ExecStart=/opt/infisical-core/embedded/bin/runsvdir-start
 Restart=always
 <% if @tasks_max %>
 TasksMax=<%= @tasks_max %>

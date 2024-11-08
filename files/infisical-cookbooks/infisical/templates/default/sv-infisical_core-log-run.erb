@@ -1,5 +1,5 @@
 #!/bin/sh
-exec /opt/infisical/embedded/bin/chpst -P \
+exec /opt/infisical-core/embedded/bin/chpst -P \
   -U root:<%= @options[:log_group] || 'root' %> \
   -u root:<%= @options[:log_group] || 'root' %> \
     svlogd <%= @options[:log_directory] %>

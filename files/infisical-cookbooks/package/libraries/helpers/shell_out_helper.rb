@@ -15,7 +15,7 @@ module ShellOutHelper
 
   def do_shell_out_with_embedded_path(cmd, user = nil, cwd = nil, env: {})
     env = env.transform_keys(&:to_sym)
-    modified_paths = ['/opt/infisical/embedded/bin']
+    modified_paths = ['/opt/infisical-core/embedded/bin']
     modified_paths << env[:PATH] if env.key?(:PATH)
     modified_paths << ENV['PATH']
     env[:PATH] = modified_paths.join(':')

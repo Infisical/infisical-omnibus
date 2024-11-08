@@ -80,7 +80,7 @@ class BasePgHelper < BaseHelper
   def user_options(db_user)
     query = "SELECT usecreatedb, usesuper, userepl, usebypassrls FROM pg_shadow WHERE usename='#{db_user}'"
     values = do_shell_out(
-      %(/opt/infisical/bin/#{service_cmd} -d template1 -c "#{query}" -tA)
+      %(/opt/infisical-core/bin/#{service_cmd} -d template1 -c "#{query}" -tA)
     ).stdout.chomp.split('|').map { |v| v == 't' }
     options = %w[CREATEDB SUPERUSER REPLICATION BYPASSRLS]
     Hash[options.zip(values)]
@@ -193,7 +193,7 @@ class BasePgHelper < BaseHelper
   # @return [Array] the list of functions associated with the database
   def list_functions(database)
     do_shell_out(
-      %(/opt/infisical/bin/#{service_cmd} -d #{database} -c '\\df' -tA -F, | cut -d, -f2)
+      %(/opt/infisical-core/bin/#{service_cmd} -d #{database} -c '\\df' -tA -F, | cut -d, -f2)
     ).stdout.split("\n")
   end
 
@@ -218,7 +218,7 @@ class BasePgHelper < BaseHelper
   end
 
   def psql_cmd(cmd_list)
-    cmd = ["/opt/infisical/bin/#{service_cmd}", cmd_list.join(' ')].join(' ')
+    cmd = ["/opt/infisical-core/bin/#{service_cmd}", cmd_list.join(' ')].join(' ')
     success?(cmd)
   end
 
@@ -235,12 +235,12 @@ class BasePgHelper < BaseHelper
   # - query: SQL query to run
   def psql_query_raw(db_name, query)
     do_shell_out(
-      %(/opt/infisical/bin/#{service_cmd} -d '#{db_name}' -c "#{query}" -tA)
+      %(/opt/infisical-core/bin/#{service_cmd} -d '#{db_name}' -c "#{query}" -tA)
     )
   end
 
   def version
-    PGVersion.parse(VersionHelper.version('/opt/infisical/embedded/bin/psql --version').split.last)
+    PGVersion.parse(VersionHelper.version('/opt/infisical-core/embedded/bin/psql --version').split.last)
   end
 
   def running_version

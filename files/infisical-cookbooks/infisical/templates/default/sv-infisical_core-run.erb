@@ -5,6 +5,6 @@ set -e # fail on errors
 exec 2>&1
 
 
-cd '/opt/infisical/server'
+cd '/opt/infisical-core/server'
 
 exec  chpst -e <%= @options[:env_dir] %> -P  -U <%= @options[:user] %>:<%= @options[:groupname] %>  -u <%= @options[:user] %>:<%= @options[:groupname] %> ./standalone-entrypoint.sh

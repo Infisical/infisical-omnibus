@@ -11,7 +11,7 @@ class OmnibusHelper
   end
 
   def service_dir_enabled?(service_name)
-    File.symlink?("/opt/infisical/service/#{service_name}")
+    File.symlink?("/opt/infisical-core/service/#{service_name}")
   end
 
   def should_notify?(service_name)
@@ -38,11 +38,11 @@ class OmnibusHelper
   end
 
   def service_up?(service_name)
-    success?("/opt/infisical/init/#{service_name} status")
+    success?("/opt/infisical-core/init/#{service_name} status")
   end
 
   def service_down?(service_name)
-    failure?("/opt/infisical/init/#{service_name} status")
+    failure?("/opt/infisical-core/init/#{service_name} status")
   end
 
   def is_managed_and_offline?(service_name)
@@ -108,9 +108,9 @@ class OmnibusHelper
   end
 
   def self.parse_current_version
-    return unless File.exist?('/opt/infisical/version-manifest.json')
+    return unless File.exist?('/opt/infisical-core/version-manifest.json')
 
-    version_manifest = JSON.parse(File.read('/opt/infisical/version-manifest.json'))
+    version_manifest = JSON.parse(File.read('/opt/infisical-core/version-manifest.json'))
     version_components = version_manifest['build_version'].split('.')
     version_components[0, 2].join('.')
   end

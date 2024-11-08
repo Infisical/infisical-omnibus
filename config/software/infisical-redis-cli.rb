@@ -33,60 +33,60 @@ build do
 
   block do
     File.open("#{install_dir}/bin/infisical-redis-cli", 'w') do |file|
-      file.print <<-EOH
-#!/bin/sh
+      file.print <<~EOH
+        #!/bin/sh
 
-error_echo()
-{
-  echo "$1" 2>& 1
-}
+        error_echo()
+        {
+          echo "$1" 2>& 1
+        }
 
-set_tls_params()
-{
-  REDIS_PARAMS="${REDIS_PARAMS} -p ${redis_tls_port} --tls"
-  if [ "${redis_tls_auth_clients}" = "yes" ]; then
-    REDIS_PARAMS="${REDIS_PARAMS} --cacertdir ${redis_tls_cacert_dir} \
-      --cacert ${redis_tls_cacert_file} \
-      --cert ${redis_tls_cert_file} \
-      --key ${redis_tls_key_file}"
-  fi
-}
+        set_tls_params()
+        {
+          REDIS_PARAMS="${REDIS_PARAMS} -p ${redis_tls_port} --tls"
+          if [ "${redis_tls_auth_clients}" = "yes" ]; then
+            REDIS_PARAMS="${REDIS_PARAMS} --cacertdir ${redis_tls_cacert_dir} \
+              --cacert ${redis_tls_cacert_file} \
+              --cert ${redis_tls_cert_file} \
+              --key ${redis_tls_key_file}"
+          fi
+        }
 
-infisical_redis_cli_rc='/opt/infisical/etc/infisical-redis-cli-rc'
+        infisical_redis_cli_rc='/opt/infisical-core/etc/infisical-redis-cli-rc'
 
-if ! [ -f ${infisical_redis_cli_rc} ] || ! [ -r ${infisical_redis_cli_rc} ] ; then
-  error_echo "$0 error: could not load ${infisical_redis_cli_rc}"
-  error_echo "Either you are not allowed to read the file, or it does not exist yet."
-  error_echo "You can generate it with:   sudo infisical-ctl reconfigure"
-  exit 1
-fi
+        if ! [ -f ${infisical_redis_cli_rc} ] || ! [ -r ${infisical_redis_cli_rc} ] ; then
+          error_echo "$0 error: could not load ${infisical_redis_cli_rc}"
+          error_echo "Either you are not allowed to read the file, or it does not exist yet."
+          error_echo "You can generate it with:   sudo infisical-ctl reconfigure"
+          exit 1
+        fi
 
-. "${infisical_redis_cli_rc}"
-
-
-if [ -e "${redis_socket}" ]; then
-  REDIS_PARAMS="-s ${redis_socket}"
-else
-  REDIS_PARAMS="-h ${redis_host}"
-  if ! [ "${redis_port}" = "0" ]; then
-    REDIS_PARAMS="${REDIS_PARAMS} -p ${redis_port}"
-  elif ! [ "${redis_tls_port}" = "0pr" ]; then
-    set_tls_params
-  fi
-fi
-
-REDISCLI_AUTH="$(awk '/^requirepass /{
-  pwd = $0 ;
-  gsub(/^requirepass /,"",pwd);
-  gsub(/^"|"$/, "", pwd);
-  print pwd }' ${redis_dir}/redis.conf)"
+        . "${infisical_redis_cli_rc}"
 
 
-if [ -n "${REDISCLI_AUTH}" ]; then
-  export REDISCLI_AUTH
-fi
+        if [ -e "${redis_socket}" ]; then
+          REDIS_PARAMS="-s ${redis_socket}"
+        else
+          REDIS_PARAMS="-h ${redis_host}"
+          if ! [ "${redis_port}" = "0" ]; then
+            REDIS_PARAMS="${REDIS_PARAMS} -p ${redis_port}"
+          elif ! [ "${redis_tls_port}" = "0pr" ]; then
+            set_tls_params
+          fi
+        fi
 
-exec /opt/infisical/embedded/bin/redis-cli $REDIS_PARAMS "$@"
+        REDISCLI_AUTH="$(awk '/^requirepass /{
+          pwd = $0 ;
+          gsub(/^requirepass /,"",pwd);
+          gsub(/^"|"$/, "", pwd);
+          print pwd }' ${redis_dir}/redis.conf)"
+
+
+        if [ -n "${REDISCLI_AUTH}" ]; then
+          export REDISCLI_AUTH
+        fi
+
+        exec /opt/infisical-core/embedded/bin/redis-cli $REDIS_PARAMS "$@"
       EOH
     end
   end

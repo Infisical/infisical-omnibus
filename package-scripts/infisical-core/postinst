@@ -11,6 +11,6 @@ error_exit()
   exit 1
 }
 
-/opt/infisical/embedded/bin/symlink_ctl_cmds
+/opt/infisical-core/embedded/bin/symlink_ctl_cmds
 
 exit 0

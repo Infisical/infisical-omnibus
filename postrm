@@ -20,7 +20,7 @@ systemctl daemon-reload
 # Remove logs directory
 rm -rf /var/log/infisical
 
-rm -rf /opt/infisical
+rm -rf /opt/infisical-core
 
 # Remove fastify user
 userdel fastify >/dev/null 2>&1

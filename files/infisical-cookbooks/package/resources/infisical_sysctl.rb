@@ -35,8 +35,8 @@ action :create do
 
   conf_name = "90-omnibus-infisical-#{new_resource.name}.conf"
 
-  file "create /opt/infisical/embedded/etc/#{conf_name} #{new_resource.name}" do
-    path "/opt/infisical/embedded/etc/#{conf_name}"
+  file "create /opt/infisical-core/embedded/etc/#{conf_name} #{new_resource.name}" do
+    path "/opt/infisical-core/embedded/etc/#{conf_name}"
     content "#{new_resource.name} = #{new_resource.value}\n"
     notifies :run, "execute[load sysctl conf #{new_resource.name}]"
     notifies :run, 'execute[reload all sysctl conf]'
@@ -45,7 +45,7 @@ action :create do
   end
 
   link "/etc/sysctl.d/#{conf_name}" do
-    to "/opt/infisical/embedded/etc/#{conf_name}"
+    to "/opt/infisical-core/embedded/etc/#{conf_name}"
     notifies :run, "execute[load sysctl conf #{new_resource.name}]"
     notifies :run, 'execute[reload all sysctl conf]'
 
@@ -54,7 +54,7 @@ action :create do
 
   # Load the settings right away
   execute "load sysctl conf #{new_resource.name}" do
-    command "sysctl -e -p /opt/infisical/embedded/etc/#{conf_name}"
+    command "sysctl -e -p /opt/infisical-core/embedded/etc/#{conf_name}"
     action :nothing
 
     only_if { node['package']['modify_kernel_parameters'] }

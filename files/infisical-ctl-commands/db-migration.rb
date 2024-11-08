@@ -29,7 +29,7 @@ add_command_under_category 'migration', 'database', 'Database operations', 2 do 
   end
 
   db_connection_key_name = 'DB_CONNECTION_URI'
-  db_connection_key_file = "/opt/infisical/etc/infisical_core/env/#{db_connection_key_name}"
+  db_connection_key_file = "/opt/infisical-core/etc/infisical_core/env/#{db_connection_key_name}"
   db_connection_value = ''
 
   if ENV[db_connection_key_name]
@@ -48,9 +48,9 @@ add_command_under_category 'migration', 'database', 'Database operations', 2 do 
 
   valid_subcommands = %w[up down list status latest rollback]
   if valid_subcommands.include?(command)
-    Dir.chdir('/opt/infisical/server') do
+    Dir.chdir('/opt/infisical-core/server') do
       system({ 'DB_CONNECTION_URI' => db_connection_value,
-               'PATH' => "#{ENV['PATH']}:/opt/infisical/embedded/bin" }, "npm run migration:#{command}")
+               'PATH' => "#{ENV['PATH']}:/opt/infisical-core/embedded/bin" }, "npm run migration:#{command}")
     end
   else
     puts "Unknown command: #{command}"

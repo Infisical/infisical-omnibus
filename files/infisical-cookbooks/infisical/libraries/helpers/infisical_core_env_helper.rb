@@ -18,7 +18,7 @@ class GitlabRailsEnvHelper
 
     def execute_rails_ruby(cmd)
       run_shell = Mixlib::ShellOut.new(%W[
-        /opt/infisical/embedded/bin/ruby
+        /opt/infisical-core/embedded/bin/ruby
         -e '#{cmd}'
       ].join(' '))
       run_shell.run_command

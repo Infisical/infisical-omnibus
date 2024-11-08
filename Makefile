@@ -13,7 +13,7 @@ status:
 	systemctl status infisical
 
 rebuild-cookbooks:
-	yes | cp -rf ./files/infisical-cookbooks/* /opt/infisical/embedded/cookbooks
+	yes | cp -rf ./files/infisical-cookbooks/* /opt/infisical-core/embedded/cookbooks
 
 pkg-deb:
 	docker build -f ./builder/Dockerfile_ubuntu_22.04 -t infisical-omnibus-ubuntu-builder .

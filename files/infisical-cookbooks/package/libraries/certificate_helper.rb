@@ -63,7 +63,7 @@ class CertificateHelper
     Digest::SHA1.hexdigest(files_modification_time.join)
   end
 
-  # Get all files in /opt/infisical/embedded/ssl/certs
+  # Get all files in /opt/infisical-core/embedded/ssl/certs
   # - "cacert.pem", "README" -> ignore
   # - if valid certificate
   #   - if symlink

@@ -19,7 +19,7 @@ maintainer 'infisical'
 homepage 'https://infisical.com'
 
 # Defaults to C:/infisical on Windows
-# and /opt/infisical on all other platforms
+# and /opt/infisical-core on all other platforms
 install_dir "#{default_root}/#{name}"
 # install_dir File.expand_path(File.join(Omnibus::Config.project_root, 'infisical-tmp'))
 

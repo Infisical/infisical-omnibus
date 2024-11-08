@@ -31,24 +31,24 @@ build do
 
   block do
     File.open("#{install_dir}/bin/infisical-healthcheck", 'w') do |file|
-      file.print <<-EOH
-#!/bin/bash
+      file.print <<~EOH
+        #!/bin/bash
 
-error_echo()
-{
-  echo "$1" 2>& 1
-}
+        error_echo()
+        {
+          echo "$1" 2>& 1
+        }
 
-infisical_healthcheck_rc='/opt/infisical/etc/infisical-healthcheck-rc'
+        infisical_healthcheck_rc='/opt/infisical-core/etc/infisical-healthcheck-rc'
 
 
-if ! [ -f ${infisical_healthcheck_rc} ] ; then
-  exit 1
-fi
+        if ! [ -f ${infisical_healthcheck_rc} ] ; then
+          exit 1
+        fi
 
-. ${infisical_healthcheck_rc}
+        . ${infisical_healthcheck_rc}
 
-exec /opt/infisical/embedded/bin/curl "$@" "${flags[@]}" "${url}"
+        exec /opt/infisical-core/embedded/bin/curl "$@" "${flags[@]}" "${url}"
       EOH
     end
   end

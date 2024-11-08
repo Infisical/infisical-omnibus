@@ -42,8 +42,7 @@ module InfisicalHandler
         k = klass.send(:new, node)
         Chef::Mixin::DeepMerge.deep_merge!(k.public_attributes, data) if k.respond_to?(:public_attributes)
       end
-      File.open('/var/opt/gitlab/public_attributes.json', 'w', 0o644) { |file| file.puts data.to_json }
-      File.open('/var/opt/infisical/public_attributes.json', 'w', 0o644) { |file| file.puts data.to_json }
+      File.open('/var/opt/infisical-core/public_attributes.json', 'w', 0o644) { |file| file.puts data.to_json }
     end
   end
 end

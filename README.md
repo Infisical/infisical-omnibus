@@ -37,7 +37,7 @@ $ bin/omnibus clean infisical
 ```
 
 Adding the `--purge` purge option removes __ALL__ files generated during the
-build including the project install directory (`/opt/infisical`) and
+build including the project install directory (`/opt/infisical-core`) and
 the package cache directory (`/var/cache/omnibus/pkg`):
 
 ```shell

@@ -16,9 +16,9 @@
 
 # Package attributes
 
-# Default location of install-dir is /opt/infisical.
+# Default location of install-dir is /opt/infisical-core.
 # DO NOT change this value unless you are building your own GitLab packages
-default['package']['install-dir'] = '/opt/infisical'
+default['package']['install-dir'] = '/opt/infisical-core'
 default['package']['detect_init'] = true
 default['package']['modify_kernel_parameters'] = true
 default['package']['systemd_tasks_max'] = 4915
@@ -35,11 +35,11 @@ default['package']['public_attributes'] = false
 
 # Setting runit defaults here so that they can be made available automatically
 # to cookbooks of individual services via depends in metadata.rb
-default['runit']['sv_bin'] = '/opt/infisical/embedded/bin/sv'
-default['runit']['chpst_bin'] = '/opt/infisical/embedded/bin/chpst'
-default['runit']['service_dir'] = '/opt/infisical/service'
-default['runit']['sv_dir'] = '/opt/infisical/sv'
-default['runit']['lsb_init_dir'] = '/opt/infisical/init'
+default['runit']['sv_bin'] = '/opt/infisical-core/embedded/bin/sv'
+default['runit']['chpst_bin'] = '/opt/infisical-core/embedded/bin/chpst'
+default['runit']['service_dir'] = '/opt/infisical-core/service'
+default['runit']['sv_dir'] = '/opt/infisical-core/sv'
+default['runit']['lsb_init_dir'] = '/opt/infisical-core/init'
 
 # SELinux Policy options to assist with transition to unified policy
 default['package']['selinux_policy_version'] = nil
