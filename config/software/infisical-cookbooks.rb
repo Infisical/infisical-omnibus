@@ -1,6 +1,7 @@
 #
 # Copyright:: Copyright (c) 2012 Opscode, Inc.
 # Copyright:: Copyright (c) 2014 GitLab.com
+# Copyright:: Copyright (c) 2024 Infisical
 # License:: Apache License, Version 2.0
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,8 +15,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-#
-
+y
 name 'infisical-cookbooks'
 
 license 'Apache-2.0'
@@ -32,7 +32,7 @@ build do
   sync './', "#{install_dir}/embedded/cookbooks/"
 
   # solo_recipes = %w(dna postgresql-bin postgresql-config pg-upgrade-config)
-  solo_recipes = %w(dna)
+  solo_recipes = %w[dna]
 
   # If EE package, use a different master cookbook
   # if EE
@@ -46,7 +46,7 @@ build do
   solo_recipes.each do |config|
     erb dest: "#{install_dir}/embedded/cookbooks/#{config}.json",
         source: "#{config}.json.erb",
-        mode: 0644,
+        mode: 0o644,
         vars: { master_cookbook: cookbook_name }
   end
 

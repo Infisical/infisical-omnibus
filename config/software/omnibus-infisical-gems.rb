@@ -1,5 +1,6 @@
 #
 ## Copyright:: Copyright (c) 2021 GitLab Inc.
+# Copyright:: Copyright (c) 2024 Infisical
 ## License:: Apache License, Version 2.0
 ##
 ## Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,6 +15,8 @@
 ## See the License for the specific language governing permissions and
 ## limitations under the License.
 #
+# Modifications made by Infisical, 2024
+# - Updated the code to align with Infisical's requirements
 
 # require "#{Omnibus::Config.project_root}/lib/infisical/ohai_helper.rb"
 name 'omnibus-infisical-gems'
@@ -54,6 +57,7 @@ build do
   bundle "install --jobs #{workers} --retry 5", env: env
 
   mkdir "#{install_dir}/licenses"
-  bundle "exec license_finder report --project_path=#{gemfile_dir} --decisions-file=#{Omnibus::Config.project_root}/support/dependency_decisions.yml --format=json --columns name version licenses texts notice --save=license.json", env: env
-  copy "license.json", "#{install_dir}/licenses/omnibus-infisical-gems.json"
+  bundle "exec license_finder report --project_path=#{gemfile_dir} --decisions-file=#{Omnibus::Config.project_root}/support/dependency_decisions.yml --format=json --columns name version licenses texts notice --save=license.json",
+         env: env
+  copy 'license.json', "#{install_dir}/licenses/omnibus-infisical-gems.json"
 end

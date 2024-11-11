@@ -1,5 +1,6 @@
 #
 ## Copyright:: Copyright (c) 2014 GitLab B.V.
+# Copyright:: Copyright (c) 2024 Infisical
 ## License:: Apache License, Version 2.0
 ##
 ## Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,13 +15,14 @@
 ## See the License for the specific language governing permissions and
 ## limitations under the License.
 ##
-#
+## Modifications made by Infisical, 2024
+## - Updated the code to align with Infisical's requirements.
 
 name 'libicu'
 
-default_version "release-63-1"
+default_version 'release-63-1'
 
-source github: "unicode-org/icu"
+source github: 'unicode-org/icu'
 
 license 'MIT'
 license_file 'icu4c/LICENSE'

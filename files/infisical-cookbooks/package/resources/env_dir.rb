@@ -1,5 +1,6 @@
 #
 # Copyright:: Copyright (c) 2016 GitLab Inc
+# Copyright:: Copyright (c) 2024 Infisica
 # License:: Apache License, Version 2.0
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,6 +14,9 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+#
+# Modifications made by Infisical, 2024
+# - Updated the code to align with Infisical's requirements
 
 resource_name :env_dir
 provides :env_dir
@@ -28,7 +32,7 @@ action :create do
   # Cleaning up non-existent variables
   if ::File.directory?(new_resource.name)
     existing_files = Dir.entries(new_resource.name).select { |f| ::File.file?(::File.join(new_resource.name, f)) }
-    deleted_env_vars = existing_files - new_resource.variables.keys - %w(. ..)
+    deleted_env_vars = existing_files - new_resource.variables.keys - %w[. ..]
     deleted_env_vars.each do |deleted_var|
       file ::File.join(new_resource.name, deleted_var) do
         sensitive true

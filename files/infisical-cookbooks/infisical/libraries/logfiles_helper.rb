@@ -1,5 +1,6 @@
 #
 # Copyright:: Copyright (c) 2015 GitLab B.V.
+# Copyright:: Copyright (c) 2024 Infisical
 # License:: Apache License, Version 2.0
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,11 +15,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
+# Modifications made by Infisical, 2024
+# - Updated the code to align with Infisical's requirements
 
 require_relative 'account_helper'
 
 class LogfilesHelper < AccountHelper
-  def default_logdir_ownership # rubocop:disable  Metrics/AbcSize
+  def default_logdir_ownership
     # TODO: Make log directory creation in all service recipes use this method
     # instead of directly using `node` values. This will ensure we don't miss
     # to add a service here.

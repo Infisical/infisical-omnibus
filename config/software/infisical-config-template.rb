@@ -1,5 +1,6 @@
 #
 # Copyright:: Copyright (c) 2014 GitLab B.V.
+# Copyright:: Copyright (c) 2024 Infisical
 # License:: Apache License, Version 2.0
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,7 +14,8 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-#
+# 
+# Modifications 
 
 name 'infisical-config-template'
 

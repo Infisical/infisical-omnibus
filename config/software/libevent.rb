@@ -1,5 +1,6 @@
 #
 # Copyright:: Copyright (c) 2017 GitLab Inc.
+# Copyright:: Copyright (c) 2024 Infisical
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,10 +14,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
+# Modifications made by Infisical, 2024
+# - Updated code to be in line with Infisical usag
 
 name 'libevent'
 
-default_version "release-2.1.12-stable"
+default_version 'release-2.1.12-stable'
 
 dependency 'libtool'
 dependency 'openssl' unless Build::Check.use_system_ssl?
@@ -26,8 +29,8 @@ license_file 'LICENSE'
 
 skip_transitive_dependency_licensing true
 
-source github: "libevent/libevent"
-relative_path "libevent"
+source github: 'libevent/libevent'
+relative_path 'libevent'
 
 build do
   env = with_standard_compiler_flags(with_embedded_path)

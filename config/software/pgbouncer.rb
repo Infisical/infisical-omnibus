@@ -1,5 +1,6 @@
 #
 # Copyright:: Copyright (c) 2017 GitLab Inc.
+# Copyright:: Copyright (c) 2024 Infisical
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,9 +14,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
+# Modifications made by Infisical, 2024
+# - Updated the code to align with Infisical's requirements
 
 name 'pgbouncer'
-default_version "pgbouncer_1_22_1"
+default_version 'pgbouncer_1_22_1'
 
 license 'ISC'
 license_file 'COPYRIGHT'
@@ -25,7 +28,7 @@ skip_transitive_dependency_licensing true
 dependency 'libevent'
 dependency 'openssl' unless Build::Check.use_system_ssl?
 
-source github: "pgbouncer/pgbouncer"
+source github: 'pgbouncer/pgbouncer'
 
 build do
   env = with_standard_compiler_flags(with_embedded_path)
@@ -36,7 +39,7 @@ build do
   command './autogen.sh', env: env, cwd: cwd
 
   prefix = "#{install_dir}/embedded"
-  configure_command = ["./configure", "--prefix=#{prefix}", "--with-libevent=#{prefix}"]
+  configure_command = ['./configure', "--prefix=#{prefix}", "--with-libevent=#{prefix}"]
   configure_command << "--with-openssl=#{prefix}" unless Build::Check.use_system_ssl?
   command configure_command.join(' '), env: env, cwd: cwd
 

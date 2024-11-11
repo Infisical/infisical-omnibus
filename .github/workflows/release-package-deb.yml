@@ -8,9 +8,30 @@ on:
       - "infisical/v*.*.*-postgres"
 
 jobs:
-  release-deb:
-    name: Build infisical standalone image postgres
+  release-amd-deb:
+    name: Build debian amd package
     runs-on: ubuntu-20.04
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - name: Build the debian package
+        run: make pkg-deb
+      - name: Copy the pkg from source to local
+        run: |
+          container_id=$(docker create infisical-omnibus-ubuntu-builder)
+          docker cp "$container_id":/omnibus-project/pkg ./pkg
+      - uses: actions/setup-python@v4
+      - run: pip install --upgrade cloudsmith-cli
+      - name: Publish to CloudSmith
+        run: sh upload_to_cloudsmith.sh
+        env:
+          CLOUDSMITH_API_KEY: ${{ secrets.CLOUDSMITH_API_KEY }}
+          
+  release-arm-deb:
+    name: Build debian arm package
+    runs-on: macos-14
     steps:
       - name: Checkout source
         uses: actions/checkout@v3

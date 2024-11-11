@@ -1,4 +1,5 @@
-# Copyright:: Copyright (c) 2017 GitLab Inc.
+# Copyright:: Copyright (c) 2014 GitLab.com
+# Copyright:: Copyright (c) 2024 Infisical
 # License:: Apache License, Version 2.0
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,6 +14,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
+# Modifications made by Infisical, 2024
+# - Updated the code to align with Infisical's requirements
 
 module DefaultRole
   class << self
@@ -27,7 +30,9 @@ module DefaultRole
     end
 
     def no_service_roles_enabled?
-      Infisical.available_roles.select { |key, role| role[:manage_services] && Infisical["#{key}_role"]['enable'] }.count.zero?
+      Infisical.available_roles.select do |key, role|
+        role[:manage_services] && Infisical["#{key}_role"]['enable']
+      end.count.zero?
     end
   end
 end

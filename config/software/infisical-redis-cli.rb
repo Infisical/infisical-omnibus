@@ -1,5 +1,6 @@
 #
 # Copyright:: Copyright (c) 2020 GitLab Inc.
+# Copyright:: Copyright (c) 2024 Infisical
 # License:: Apache License, Version 2.0
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,6 +15,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
+# Modifications made by Infisical, 2024
+# - Updated the code to align with Infisical's requirements
 
 require 'digest'
 

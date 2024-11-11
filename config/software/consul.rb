@@ -1,5 +1,6 @@
 #
 # Copyright:: Copyright (c) 2017 GitLab Inc.
+# Copyright:: Copyright (c) 2024 Infisical
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,17 +14,19 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
+# Modifications made by Infisical, 2024
+# - Updated the code to align with Infisical's requirements
 
 name 'consul'
 
 # This version should be keep in sync with consul versions in
 # consul_download.rb and consul_helper.rb.
-default_version "v1.18.2"
+default_version 'v1.18.2'
 
 license 'BSL-Hashicorp'
 license_file 'LICENSE'
 
-source github: "hashicorp/consul"
+source github: 'hashicorp/consul'
 
 skip_transitive_dependency_licensing true
 
@@ -41,5 +44,5 @@ build do
 
   command "license_finder report --enabled-package-managers godep gomodules --decisions-file=#{Omnibus::Config.project_root}/support/dependency_decisions.yml --format=json --columns name version licenses texts notice --save=license.json"
   mkdir "#{install_dir}/licenses"
-  copy "license.json", "#{install_dir}/licenses/consul.json"
+  copy 'license.json', "#{install_dir}/licenses/consul.json"
 end

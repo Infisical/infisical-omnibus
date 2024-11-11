@@ -1,4 +1,5 @@
 # Copyright:: Copyright (c) 2017 GitLab Inc.
+# Copyright:: Copyright (c) 2024 Infisical
 # License:: Apache License, Version 2.0
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +13,8 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-#
+# Modifications made by Infisical, 2024
+# - Updated the code to align with Infisical's requirements
 
 module ConsulRole
   def self.load_role
