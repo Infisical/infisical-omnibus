@@ -20,7 +20,7 @@ jobs:
         run: make pkg-deb
       - name: Copy the pkg from source to local
         run: |
-          container_id=$(docker create infisical-omnibus-ubuntu-builder)
+          container_id=$(docker create infisical-omnibus-debian-builder)
           docker cp "$container_id":/omnibus-project/pkg ./pkg
       - uses: actions/setup-python@v4
       - run: pip install --upgrade cloudsmith-cli
@@ -41,7 +41,7 @@ jobs:
         run: make pkg-rpm
       - name: Copy the pkg from source to local
         run: |
-          container_id=$(docker create infisical-omnibus-ubuntu-builder)
+          container_id=$(docker create infisical-omnibus-rpm-builder)
           docker cp "$container_id":/omnibus-project/pkg ./pkg
       - uses: actions/setup-python@v4
       - run: pip install --upgrade cloudsmith-cli
