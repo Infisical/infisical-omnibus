@@ -1,4 +1,4 @@
-name: Build and release CLI
+name: Build and release Deb Package
 
 on:
   workflow_dispatch:
