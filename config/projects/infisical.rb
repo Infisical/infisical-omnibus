@@ -18,7 +18,6 @@ replace         'infisical'
 conflict        'infisical'
 
 license 'MIT'
-license_compiled_output true
 
 override :libffi, version: '3.4.2'
 override :openssl, version: '3.0.12'

@@ -4,6 +4,7 @@ logging_settings = logfiles_helper.logging_settings('infisical_core')
 
 user_name = account_helper.infisical_core_user.to_s
 user_group = account_helper.infisical_core_group.to_s
+
 service_name = 'infisical_core'
 infisical_core_env_dir = node['infisical']['infisical_core']['env_dir']
 should_auto_migrate = node['infisical']['infisical_core']['auto_migration']
@@ -13,7 +14,7 @@ user user_name do
   comment 'infisical service account'
   system true
   shell '/sbin/nologin'
-  home "/opt/#{user_name}"
+  home '/opt/infisical-core'
   action :create
 end
 
@@ -62,17 +63,17 @@ file '/usr/sbin/update-ca-certificates' do
   action :create
 end
 
-directory "Create /var/log/infisical/#{service_name}" do
-  path logging_settings[:log_directory]
-  owner user_name
-  group user_group
-  mode '0755'
+directory logging_settings[:log_directory] do
+  owner logging_settings[:log_directory_owner]
+  mode logging_settings[:log_directory_mode]
+  if log_group = logging_settings[:log_directory_group]
+    group log_group
+  end
   recursive true
-  action :create
 end
 
 infisical_core_env = {
-  'PATH' => "#{ENV['PATH']}:/opt/#{service_name}/embedded/bin",
+  'PATH' => "#{ENV['PATH']}:/opt/infisical-core/embedded/bin",
   'NODE_ENV' => 'production',
   'STANDALONE_BUILD' => 'true',
   'STANDALONE_MODE' => 'true'
@@ -112,6 +113,6 @@ runit_service service_name do
           })
   owner user_name
   group user_group
-  supervisor_owner 'root'
-  supervisor_group 'root'
+  supervisor_owner user_name
+  supervisor_group user_group
 end

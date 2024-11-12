@@ -1,4 +1,3 @@
-
 version: "3.9"
 
 services:
@@ -12,6 +11,11 @@ services:
       POSTGRES_PASSWORD: infisical
       POSTGRES_USER: infisical
       POSTGRES_DB: infisical
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
 
   redis:
     image: redis
@@ -22,6 +26,11 @@ services:
       - 6379:6379
     volumes:
       - redis_data:/data
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
 
 volumes:
   postgres-data:

@@ -3,7 +3,7 @@ require_relative 'package/libraries/formatters/infisical'
 
 CURRENT_PATH = __dir__
 TIME = Time.now.to_i
-LOG_PATH = '/var/log/infisical/reconfigure'.freeze
+LOG_PATH = '/var/log/infisical-core/reconfigure'.freeze
 Dir.exist?(LOG_PATH) || FileUtils.mkdir_p(LOG_PATH)
 add_formatter :infisical
 file_cache_path "#{CURRENT_PATH}/cache"
