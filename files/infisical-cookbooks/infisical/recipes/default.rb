@@ -19,6 +19,15 @@ directory 'Create /var/opt/infisical-core' do
   action :create
 end
 
+directory "Create /var/log/infisical-core" do
+  path "/var/log/infisical-core"
+  owner "root"
+  group "root"
+  mode "0755"
+  recursive true
+  action :create
+end
+
 include_recipe 'package::runit'
 
 include_recipe 'package::sysctl'

@@ -18,7 +18,7 @@ rm -f /etc/systemd/system/infisical.service
 systemctl daemon-reload
 
 # Remove logs directory
-rm -rf /var/log/infisical
+rm -rf /var/log/infisical-core
 
 rm -rf /opt/infisical-core
 

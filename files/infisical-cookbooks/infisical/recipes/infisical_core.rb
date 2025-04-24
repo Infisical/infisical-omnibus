@@ -67,10 +67,11 @@ directory "Create /var/log/infisical/#{service_name}" do
 end
 
 infisical_core_env = {
-  'PATH' => "#{ENV['PATH']}:/opt/#{service_name}/embedded/bin",
+  'PATH' => "#{ENV['PATH']}:/opt/infisical-core/embedded/bin",
+  'LD_LIBRARY_PATH' => "#{ENV['LD_LIBRARY_PATH']}:/opt/infisical-core/embedded/lib",
   'NODE_ENV' => 'production',
   'STANDALONE_BUILD' => 'true',
-  'STANDALONE_MODE' => 'true'
+  'STANDALONE_MODE' => 'true',
 }
 
 # Iterate through each key-value pair in node['infisical']['user']

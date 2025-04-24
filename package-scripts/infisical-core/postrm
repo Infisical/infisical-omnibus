@@ -36,3 +36,7 @@ elif [ "x$1" = "x0" ]; then
   # RPM-based system and we're deinstalling rather than upgrading
   cleanup_symlinks
 fi
+
+rm -rf /var/log/infisical-core
+
+# rm -rf /opt/infisical-core

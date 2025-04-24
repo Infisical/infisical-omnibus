@@ -6,6 +6,9 @@ source github: 'Infisical/infisical'
 relative_path 'infisical'
 
 dependency 'nodejs'
+dependency 'freetds'
+dependency 'unixodbc'
+dependency 'nodejs'
 
 build do
   env = with_standard_compiler_flags(with_embedded_path)
@@ -38,7 +41,7 @@ build do
       mkdir  "#{install_dir}/server/#{frontend_folder_name}"
 
       # Copy build artifacts
-      copy "#{Dir.pwd}/dist", "#{install_dir}/server/#{frontend_folder_name}"
+      copy "#{Dir.pwd}/dist/*", "#{install_dir}/server/#{frontend_folder_name}"
     end
   end
 

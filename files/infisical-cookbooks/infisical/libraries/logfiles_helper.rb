@@ -67,6 +67,7 @@ class LogfilesHelper < AccountHelper
       # mattermost uses 'log_file_directory' instead of 'log_directory'
       service_settings('mattermost')['log_file_directory']
     else
+      print
       service_settings(service)['log_directory']
     end
   end
@@ -136,8 +137,12 @@ class LogfilesHelper < AccountHelper
     # Ensure we are using the hyphenated form of the service name as that is
     # expected by various methods being called here
     service = SettingsDSL::Utils.service_name(service)
+    log_dir = logdir(service) # Capture the output of logdir
+
+    puts "Service: #{service}" # Print the service name
+    puts "Log Directory: #{log_dir}" # Print the log directory
     {
-      log_directory: logdir(service),
+      log_directory: log_dir,
       log_directory_owner: logdir_owner(service),
       log_directory_group: logdir_group(service),
       log_directory_mode: logdir_mode(service),

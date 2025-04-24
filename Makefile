@@ -1,16 +1,16 @@
 .PHONY: clean-up reset status rebuild-cookbook pkg-deb pkg-rpm
 
 clean-up:
-	dpkg -r infisical && \
+	dpkg -r infisical-core && \
 	rm -rf pkg && \
 	./bin/omnibus clean infisical --purge
 
 reset:
-	dpkg -r infisical && \
+	dpkg -r infisical-core && \
 	rm -rf pkg
 
 status:
-	systemctl status infisical
+	systemctl status infisical-core
 
 rebuild-cookbooks:
 	yes | cp -rf ./files/infisical-cookbooks/* /opt/infisical-core/embedded/cookbooks

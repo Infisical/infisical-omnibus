@@ -21,7 +21,7 @@ class PgHelper < BasePgHelper
     ]
 
     {
-      service_name => node[service_name].select do |key, _value|
+      service_name => node[service_name]&.select do |key, _value|
         attributes.include?(key)
       end
     }

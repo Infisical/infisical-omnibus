@@ -122,3 +122,5 @@ $ bin/kitchen login ubuntu-1804
 
 For a complete list of all commands and platforms, run `kitchen list` or
 `kitchen help`.
+
+vi /var/log/infisical/infisical-core/current
