@@ -6,7 +6,6 @@ user_name = account_helper.infisical_core_user.to_s
 user_group = account_helper.infisical_core_group.to_s
 service_name = 'infisical_core'
 infisical_core_env_dir = node['infisical']['infisical_core']['env_dir']
-should_auto_migrate = node['infisical']['infisical_core']['auto_migration']
 
 # Ensure the infisical user exists
 user user_name do
@@ -18,19 +17,15 @@ user user_name do
 end
 
 execute 'chown infisical core' do
-  command "chown -R #{user_group}:#{user_group} /opt/infisical-core/server/frontend-build/scripts /opt/infisical-core/server/frontend-build/public/data /opt/infisical-core/server/frontend-build/.next /opt/infisical-core/server/standalone-entrypoint.sh"
+  command "chown -R #{user_group}:#{user_group}  /opt/infisical-core/server/standalone-entrypoint.sh"
   user 'root'
 end
 
 execute 'chmod infisical core' do
-  command 'chmod -R 555 /opt/infisical-core/server/frontend-build/scripts  /opt/infisical-core/server/standalone-entrypoint.sh'
+  command 'chmod -R 555  /opt/infisical-core/server/standalone-entrypoint.sh'
   user 'root'
 end
 
-execute 'chmod infisical frontend' do
-  command 'chmod -R 755 /opt/infisical-core/server/frontend-build/.next'
-  user 'root'
-end
 
 # Set executable permissions on node, npm, and npx binaries
 %w[/opt/infisical-core/embedded/bin/node /opt/infisical-core/embedded/bin/npm
@@ -84,15 +79,6 @@ node['infisical']['infisical_core'].each do |key, value|
   if key == key.upcase && !value.nil?
     # Add the key-value pair to the hash
     infisical_core_env[key] = value.to_s
-  end
-end
-
-if should_auto_migrate
-  execute 'Run database auto migration' do
-    command 'npm run migration:latest'
-    environment infisical_core_env
-    cwd '/opt/infisical-core/server'
-    user 'root'
   end
 end
 

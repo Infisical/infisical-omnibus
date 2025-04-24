@@ -35,19 +35,10 @@ build do
 
       frontend_folder_name = 'frontend-build'
 
-      mkdir  "#{install_dir}/server/#{frontend_folder_name}/.next"
-      mkdir  "#{install_dir}/server/#{frontend_folder_name}/scripts"
-      mkdir  "#{install_dir}/server/#{frontend_folder_name}/.next/cache/images"
-      mkdir  "#{install_dir}/server/#{frontend_folder_name}/.next/static"
+      mkdir  "#{install_dir}/server/#{frontend_folder_name}"
 
       # Copy build artifacts
-      copy "#{Dir.pwd}/package.json", "#{install_dir}/server/#{frontend_folder_name}"
-      copy "#{Dir.pwd}/package-lock.json", "#{install_dir}/server/#{frontend_folder_name}"
-      copy "#{Dir.pwd}/.next/standalone/*", "#{install_dir}/server/#{frontend_folder_name}"
-      copy "#{Dir.pwd}/.next/static/*", "#{install_dir}/server/#{frontend_folder_name}/.next/static"
-      copy "#{Dir.pwd}/.next/cache/images/*", "#{install_dir}/server/#{frontend_folder_name}/.next/cache/images"
-      copy "#{Dir.pwd}/scripts", "#{install_dir}/server/#{frontend_folder_name}"
-      copy "#{Dir.pwd}/public", "#{install_dir}/server/#{frontend_folder_name}"
+      copy "#{Dir.pwd}/dist", "#{install_dir}/server/#{frontend_folder_name}"
     end
   end
 

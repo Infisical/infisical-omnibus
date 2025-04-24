@@ -16,9 +16,8 @@ id -u infisical >/dev/null 2>&1 || \
   useradd -r -d /opt/infisical-core -s /sbin/nologin \
     -c "infisical service account" infisical
 
-chown -R "infisical:infisical" /opt/infisical-core/server/frontend-build/scripts /opt/infisical-core/server/frontend-build/public/data /opt/infisical-core/server/frontend-build/.next /opt/infisical-core/server/standalone-entrypoint.sh
-chmod -R 555 /opt/infisical-core/server/frontend-build/scripts  /opt/infisical-core/server/standalone-entrypoint.sh
-chmod -R 755 /opt/infisical-core/server/frontend-build/.next
+chown -R "infisical:infisical" /opt/infisical-core/server/standalone-entrypoint.sh
+chmod -R 555 /opt/infisical-core/server/standalone-entrypoint.sh
 
 chmod +x /opt/infisical-core/bin/node /opt/infisical-core/bin/npm /opt/infisical-core/bin/npx
 

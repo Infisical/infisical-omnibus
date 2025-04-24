@@ -28,6 +28,7 @@ dependency 'preparation'
 
 # infisical dependencies/components
 
+dependency 'openssl'
 dependency 'omnibus-infisical-gems'
 # dependency 'redis'
 # dependency 'jemalloc'
