@@ -15,7 +15,7 @@ RUN apt-get update -q \
     && apt-get clean -yqq \
     && rm -rf /var/lib/apt/lists/*
 
-    
+
 RUN apt-get update -q \
   && DEBIAN_FRONTEND=noninteractive apt-get install -yq --no-install-recommends \
        build-essential \
@@ -87,6 +87,8 @@ COPY --from=base / /
 
 # Set the working directory
 WORKDIR /omnibus-project
+
+ENV NODE_OPTIONS="--max-old-space-size=8192"
 
 RUN chmod +x ./build.sh
 RUN bash ./build.sh

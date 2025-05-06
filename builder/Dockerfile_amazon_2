@@ -69,6 +69,8 @@ COPY --from=base / /
 # Set the working directory
 WORKDIR /omnibus-project
 
+ENV NODE_OPTIONS="--max-old-space-size=8192"
+
 RUN chmod +x ./build.sh
 RUN bash ./build.sh
 

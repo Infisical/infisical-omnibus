@@ -16,7 +16,7 @@ rebuild-cookbooks:
 	yes | cp -rf ./files/infisical-cookbooks/* /opt/infisical-core/embedded/cookbooks
 
 pkg-deb:
-	docker build -f ./builder/Dockerfile_ubuntu_22.04 -t infisical-omnibus-debian-builder .
+	docker build  --memory=8g --memory-swap=16g -f ./builder/Dockerfile_ubuntu_22.04 -t infisical-omnibus-debian-builder .
 
 pkg-rpm:
-	docker build -f ./builder/Dockerfile_amazon_2 -t infisical-omnibus-rpm-builder .
+	docker build --memory=8g --memory-swap=16g -f ./builder/Dockerfile_amazon_2 -t infisical-omnibus-rpm-builder .
