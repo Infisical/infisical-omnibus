@@ -29,6 +29,7 @@ dependency 'preparation'
 
 dependency 'openssl'
 dependency 'omnibus-infisical-gems'
+dependency 'chef-gem'
 # dependency 'redis'
 # dependency 'jemalloc'
 # dependency 'logrotate'
