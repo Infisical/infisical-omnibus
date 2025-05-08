@@ -72,6 +72,7 @@ infisical_core_env = {
   'NODE_ENV' => 'production',
   'STANDALONE_BUILD' => 'true',
   'STANDALONE_MODE' => 'true',
+  'NODE_OPTIONS' => '--max-old-space-size=1024'
 }
 
 # Iterate through each key-value pair in node['infisical']['user']
