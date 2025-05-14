@@ -107,6 +107,13 @@ class OmnibusHelper
     }
   end
 
+  def self.get_raw_current_version
+    return unless File.exist?('/opt/infisical-core/version-manifest.json')
+
+    version_manifest = JSON.parse(File.read('/opt/infisical-core/version-manifest.json'))
+    version_manifest['build_version']
+  end
+
   def self.parse_current_version
     return unless File.exist?('/opt/infisical-core/version-manifest.json')
 
