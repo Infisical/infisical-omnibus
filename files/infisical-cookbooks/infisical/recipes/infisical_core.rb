@@ -37,25 +37,25 @@ end
 end
 
 # Set ownership and permissions for SSL certificates
-directory '/etc/ssl/certs' do
-  owner user_name
-  recursive true
-  mode '0700'
-  action :create
-end
+# directory '/etc/ssl/certs' do
+#   owner user_name
+#   recursive true
+#   mode '0700'
+#   action :create
+# end
 
-file '/etc/ssl/certs/ca-certificates.crt' do
-  owner user_name
-  mode '0644'
-  action :create
-end
+# file '/etc/ssl/certs/ca-certificates.crt' do
+#   owner user_name
+#   mode '0644'
+#   action :create
+# end
 
-# Set permissions for update-ca-certificates
-file '/usr/sbin/update-ca-certificates' do
-  owner user_name
-  mode '0755'
-  action :create
-end
+# # Set permissions for update-ca-certificates
+# file '/usr/sbin/update-ca-certificates' do
+#   owner user_name
+#   mode '0755'
+#   action :create
+# end
 
 directory "Create /var/log/infisical/#{service_name}" do
   path logging_settings[:log_directory]

@@ -37,6 +37,6 @@ elif [ "x$1" = "x0" ]; then
   cleanup_symlinks
 fi
 
-rm -rf /var/log/infisical-core
+# rm -rf /var/log/infisical-core
 
 # rm -rf /opt/infisical-core

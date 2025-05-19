@@ -7,4 +7,5 @@ exec 2>&1
 
 cd '/opt/infisical-core/server'
 
-exec  chpst -e <%= @options[:env_dir] %> -P  -U <%= @options[:user] %>:<%= @options[:groupname] %>  -u <%= @options[:user] %>:<%= @options[:groupname] %> ./standalone-entrypoint.sh
+# exec  chpst -e <%= @options[:env_dir] %> -P  -U <%= @options[:user] %>:<%= @options[:groupname] %>  -u <%= @options[:user] %>:<%= @options[:groupname] %> ./standalone-entrypoint.sh
+exec  chpst -e <%= @options[:env_dir] %> -P  -U <%= @options[:user] %>:<%= @options[:groupname] %>  -u <%= @options[:user] %>:<%= @options[:groupname] %> node --enable-source-maps ./dist/main.mjs
