@@ -1,7 +1,7 @@
 infisical Omnibus project
 =============================
 
-This project creates full-stack platform-specific packages for `infisical`!
+This project creates full-stack platform-specific packages for `infisical`
 
 Installation
 ------------
