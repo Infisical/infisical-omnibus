@@ -1,10 +1,9 @@
-infisical Omnibus project
-=============================
+# infisical Omnibus project
 
-This project creates full-stack platform-specific packages for `infisical` !
+This project creates full-stack platform-specific packages for `infisical` in postgres version
 
-Installation
-------------
+## Installation
+
 You must have a sane Ruby 2.0.0+ environment with Bundler installed. Ensure all
 the required gems are installed:
 
@@ -12,10 +11,11 @@ the required gems are installed:
 $ bundle install --binstubs
 ```
 
-Usage
------
+## Usage
+
 ### Build
 
+w
 You create a platform-specific package using the `build project` command:
 
 ```shell
@@ -36,7 +36,7 @@ the `clean` command:
 $ bin/omnibus clean infisical
 ```
 
-Adding the `--purge` purge option removes __ALL__ files generated during the
+Adding the `--purge` purge option removes **ALL** files generated during the
 build including the project install directory (`/opt/infisical-core`) and
 the package cache directory (`/var/cache/omnibus/pkg`):
 
@@ -63,13 +63,12 @@ Full help for the Omnibus command line interface can be accessed with the
 $ bin/omnibus help
 ```
 
-Version Manifest
-----------------
+## Version Manifest
 
 Git-based software definitions may specify branches as their
 default_version. In this case, the exact git revision to use will be
 determined at build-time unless a project override (see below) or
-external version manifest is used.  To generate a version manifest use
+external version manifest is used. To generate a version manifest use
 the `omnibus manifest` command:
 
 ```
@@ -79,9 +78,8 @@ omnibus manifest PROJECT -l warn
 This will output a JSON-formatted manifest containing the resolved
 version of every software definition.
 
+## Kitchen-based Build Environment
 
-Kitchen-based Build Environment
--------------------------------
 Every Omnibus project ships with a project-specific
 [Berksfile](https://docs.chef.io/berkshelf.html) that will allow you to build
 your omnibus projects on all of the platforms listed in the
@@ -102,7 +100,6 @@ information, please see the [Infisical Kitchen documentation](https://kitchen.ci
 Once you have tweaked your [`.kitchen.yml`](.kitchen.yml) (or
 [`.kitchen.local.yml`](.kitchen.local.yml)) to your liking, you can bring up an
 individual build environment using the `kitchen` command.
-
 
 ```shell
 $ bin/kitchen converge ubuntu-1804
