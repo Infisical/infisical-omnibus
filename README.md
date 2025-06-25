@@ -1,7 +1,7 @@
 infisical Omnibus project
 =============================
 
-This project creates full-stack platform-specific packages for `infisical`
+This project creates full-stack platform-specific packages for `infisical` in postgres version
 
 Installation
 ------------
@@ -15,7 +15,7 @@ $ bundle install --binstubs
 Usage
 -----
 ### Build
-
+ w
 You create a platform-specific package using the `build project` command:
 
 ```shell
