@@ -15,7 +15,6 @@ $ bundle install --binstubs
 
 ### Build
 
-w
 You create a platform-specific package using the `build project` command:
 
 ```shell
