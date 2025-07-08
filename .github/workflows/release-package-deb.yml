@@ -10,7 +10,7 @@ on:
 jobs:
     release-amd-debian-package:
         name: Build debian amd package
-        runs-on: ubuntu-22.04
+        runs-on: ubuntu-latest-8-cores
         steps:
             - name: Checkout source
               uses: actions/checkout@v3
@@ -31,7 +31,7 @@ jobs:
 
     release-amd-rpm-package:
         name: Build rpm amd package
-        runs-on: ubuntu-22.04
+        runs-on: ubuntu-latest-8-cores
         steps:
             - name: Checkout source
               uses: actions/checkout@v3
