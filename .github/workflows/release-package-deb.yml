@@ -5,7 +5,7 @@ on:
     push:
         # run only against tags
         tags:
-            - "infisical/v*.*.*-postgres"
+            - "infisical/v*.*.*"
 
 jobs:
     release-amd-debian-package:
