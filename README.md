@@ -1,6 +1,6 @@
 # infisical Omnibus project
 
-Latest Version: infisical/v0.147.1.
+Latest Version: infisical/v0.147.1..
 
 This project creates full-stack platform-specific packages for `infisical` in postgres version..
 
