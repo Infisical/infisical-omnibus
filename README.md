@@ -2,6 +2,10 @@
 
 This project creates full-stack platform-specific packages for `infisical` in postgres version.
 
+## Version Mapping
+
+- v0.149.1 = v0.150.0-nightly-20250916.1
+
 ## Installation
 
 You must have a sane Ruby 2.0.0+ environment with Bundler installed. Ensure all

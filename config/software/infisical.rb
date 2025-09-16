@@ -1,6 +1,6 @@
 name 'infisical'
-default_version "v#{Build.version}"
-# default_version "infisical/v0.129.1-postgres"
+# default_version "v#{Build.version}"
+default_version "v0.150.0-nightly-20250916.1"
 
 source github: 'Infisical/infisical'
 
