@@ -1,6 +1,6 @@
 name 'infisical'
-# default_version "v#{Build.version}"
-default_version "v0.150.0-nightly-20250916.1"
+default_version "v#{Build.version}"
+# default_version "v0.150.0-nightly-20250916.1"
 
 source github: 'Infisical/infisical'
 
@@ -13,7 +13,7 @@ dependency 'nodejs'
 
 build do
   env = with_standard_compiler_flags(with_embedded_path)
-  env['NODE_OPTIONS'] = "--max-old-space-size=8192"
+  env['NODE_OPTIONS'] = '--max-old-space-size=8192'
 
   block do
     # Build client application
@@ -40,7 +40,7 @@ build do
 
       frontend_folder_name = 'frontend-build'
 
-      mkdir  "#{install_dir}/server/#{frontend_folder_name}"
+      mkdir "#{install_dir}/server/#{frontend_folder_name}"
 
       # Copy build artifacts
       copy "#{Dir.pwd}/dist/*", "#{install_dir}/server/#{frontend_folder_name}"

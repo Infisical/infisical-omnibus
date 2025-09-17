@@ -5,7 +5,9 @@ on:
     push:
         # run only against tags
         tags:
-            - "infisical/v*.*.*"
+            - "v*.*.*"
+            - "v*.*.*-nightly-*"
+            - "v*.*.*-nightly-*.*"
 
 jobs:
     release-amd-debian-package:
