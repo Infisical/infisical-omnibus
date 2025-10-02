@@ -11,7 +11,7 @@ module Build
 
   class << self
     def version
-      tag = Infisical::Util.shellout_stdout('git describe --tags --abbrev=0') || 'v0.0.1'
+      tag = Infisical::Util.shellout_stdout('git tag --sort=-v:refname | head -n 1') || 'v0.0.1'
       if match = tag.match(/^v(.+)$/)
         return match[1]
       end
