@@ -25,11 +25,26 @@ jobs:
                   container_id=$(docker create infisical-omnibus-debian-builder)
                   docker cp "$container_id":/omnibus-project/pkg ./pkg
             - uses: actions/setup-python@v4
-            - run: pip install --upgrade cloudsmith-cli
-            - name: Publish to CloudSmith
+            - uses: ruby/setup-ruby@354a1ad156761f5ee2b7b13fa8e09943a5e8d252
+              with:
+                ruby-version: "3.3"
+                bundler-cache: true
+            - name: Install deb-s3
+              run: gem install deb-s3
+
+            - name: Configure GPG Key
+              run: echo -n "$GPG_SIGNING_KEY" | base64 --decode | gpg --batch --import
+              env:
+                GPG_SIGNING_KEY: ${{ secrets.GPG_SIGNING_KEY }}
+                GPG_SIGNING_KEY_PASSPHRASE: ${{ secrets.GPG_SIGNING_KEY_PASSPHRASE }}
+
+            - name: Publish to Cloudsmith
               run: sh upload_to_cloudsmith.sh
               env:
-                  CLOUDSMITH_API_KEY: ${{ secrets.CLOUDSMITH_API_KEY }}
+                INFISICAL_BINARY_S3_BUCKET: ${{ secrets.INFISICAL_BINARY_S3_BUCKET }}
+                GPG_SIGNING_KEY_ID: ${{ secrets.GPG_SIGNING_KEY_ID }} 
+                AWS_ACCESS_KEY_ID: ${{ secrets.INFISICAL_BINARY_REPO_AWS_ACCESS_KEY_ID }}
+                AWS_SECRET_ACCESS_KEY: ${{ secrets.INFISICAL_BINARY_REPO_AWS_SECRET_ACCESS_KEY }}
 
     release-amd-rpm-package:
         name: Build rpm amd package
@@ -46,8 +61,22 @@ jobs:
                   container_id=$(docker create infisical-omnibus-rpm-builder)
                   docker cp "$container_id":/omnibus-project/pkg ./pkg
             - uses: actions/setup-python@v4
-            - run: pip install --upgrade cloudsmith-cli
+            - uses: ruby/setup-ruby@354a1ad156761f5ee2b7b13fa8e09943a5e8d252
+              with:
+                ruby-version: "3.3"
+                bundler-cache: true
+            - name: Install deb-s3
+              run: gem install deb-s3
+
+            - name: Configure GPG Key
+              run: echo -n "$GPG_SIGNING_KEY" | base64 --decode | gpg --batch --import
+              env:
+                GPG_SIGNING_KEY: ${{ secrets.GPG_SIGNING_KEY }}
+                GPG_SIGNING_KEY_PASSPHRASE: ${{ secrets.GPG_SIGNING_KEY_PASSPHRASE }}
             - name: Publish to CloudSmith
               run: sh upload_to_cloudsmith.sh
               env:
-                  CLOUDSMITH_API_KEY: ${{ secrets.CLOUDSMITH_API_KEY }}
+                INFISICAL_BINARY_S3_BUCKET: ${{ secrets.INFISICAL_BINARY_S3_BUCKET }}
+                GPG_SIGNING_KEY_ID: ${{ secrets.GPG_SIGNING_KEY_ID }} 
+                AWS_ACCESS_KEY_ID: ${{ secrets.INFISICAL_BINARY_REPO_AWS_ACCESS_KEY_ID }}
+                AWS_SECRET_ACCESS_KEY: ${{ secrets.INFISICAL_BINARY_REPO_AWS_SECRET_ACCESS_KEY }}
