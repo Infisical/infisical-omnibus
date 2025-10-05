@@ -38,6 +38,11 @@ jobs:
               run: |
                   pip install mkrepo univers boto3
 
+            - name: Install RPM signing tools
+              run: |
+                  sudo apt-get update
+                  sudo apt-get install -y rpm
+
             - name: Install AWS CLI
               run: |
                 pip install awscli

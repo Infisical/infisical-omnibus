@@ -8,13 +8,18 @@ done
 for i in *.rpm; do
     [ -f "$i" ] || break
     
+    # strip out .amazon2023 suffix if present
     new_name=$(echo "$i" | sed 's/.amazon2023//g')
     if [ "$i" != "$new_name" ]; then
         mv "$i" "$new_name"
     fi
     
+    #sign the rpm package
+    rpmsign --addsign --key-id="$GPG_SIGNING_KEY_ID" "$new_name"
+    
     aws s3 cp "$new_name" "s3://$INFISICAL_BINARY_S3_BUCKET/rpm/Packages/"
 done
+
 
 # regenerate RPM repository metadata with mkrepo
 if ls *.rpm 1> /dev/null 2>&1; then
