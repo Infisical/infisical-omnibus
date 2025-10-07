@@ -10,7 +10,7 @@ on:
             - "v*.*.*-nightly-*.*"
 
 jobs:
-    release-amd-debian-package:
+    build-debian-package:
         name: Build debian amd package
         runs-on: ubuntu-latest-8-cores
         steps:
@@ -24,46 +24,14 @@ jobs:
               run: |
                   container_id=$(docker create infisical-omnibus-debian-builder)
                   docker cp "$container_id":/omnibus-project/pkg ./pkg
-            - uses: actions/setup-python@v4
+            - name: Upload debian packages as artifacts
+              uses: actions/upload-artifact@v3
               with:
-                python-version: '3.12'
-            - uses: ruby/setup-ruby@354a1ad156761f5ee2b7b13fa8e09943a5e8d252
-              with:
-                ruby-version: "3.3"
-                bundler-cache: true
-            - name: Install deb-s3
-              run: gem install deb-s3
+                  name: debian-packages
+                  path: pkg/*.deb
+                  retention-days: 1
 
-
-
-            - name: Install RPM signing tools
-              run: |
-                  sudo apt-get update
-                  sudo apt-get install -y rpm
-
-            - name: Install mkrepo and dependencies
-              run: |
-                  pip install mkrepo univers boto3
-
-            - name: Install AWS CLI
-              run: |
-                pip install awscli
-
-            - name: Configure GPG Key
-              run: echo -n "$GPG_SIGNING_KEY" | base64 --decode | gpg --batch --import
-              env:
-                GPG_SIGNING_KEY: ${{ secrets.GPG_SIGNING_KEY }}
-                GPG_SIGNING_KEY_PASSPHRASE: ${{ secrets.GPG_SIGNING_KEY_PASSPHRASE }}
-
-            - name: Publish to Debian repository
-              run: sh upload_to_s3.sh
-              env:
-                INFISICAL_BINARY_S3_BUCKET: ${{ secrets.INFISICAL_BINARY_S3_BUCKET }}
-                GPG_SIGNING_KEY_ID: ${{ secrets.GPG_SIGNING_KEY_ID }} 
-                AWS_ACCESS_KEY_ID: ${{ secrets.INFISICAL_BINARY_REPO_AWS_ACCESS_KEY_ID }}
-                AWS_SECRET_ACCESS_KEY: ${{ secrets.INFISICAL_BINARY_REPO_AWS_SECRET_ACCESS_KEY }}
-
-    release-amd-rpm-package:
+    build-rpm-package:
         name: Build rpm amd package
         runs-on: ubuntu-latest-8-cores
         steps:
@@ -77,13 +45,41 @@ jobs:
               run: |
                   container_id=$(docker create infisical-omnibus-rpm-builder)
                   docker cp "$container_id":/omnibus-project/pkg ./pkg
+            - name: Upload rpm packages as artifacts
+              uses: actions/upload-artifact@v3
+              with:
+                  name: rpm-packages
+                  path: pkg/*.rpm
+                  retention-days: 1
+
+    release-packages:
+        name: Release packages to repositories
+        needs:
+            - build-debian-package
+            - build-rpm-package
+        runs-on: ubuntu-latest-8-cores
+        steps:
+            - name: Checkout source
+              uses: actions/checkout@v3
+              with:
+                  fetch-depth: 0
+            - name: Download debian packages
+              uses: actions/download-artifact@v3
+              with:
+                  name: debian-packages
+                  path: pkg
+            - name: Download rpm packages
+              uses: actions/download-artifact@v3
+              with:
+                  name: rpm-packages
+                  path: pkg
             - uses: actions/setup-python@v4
               with:
-                python-version: '3.12'
+                  python-version: "3.12"
             - uses: ruby/setup-ruby@354a1ad156761f5ee2b7b13fa8e09943a5e8d252
               with:
-                ruby-version: "3.3"
-                bundler-cache: true
+                  ruby-version: "3.3"
+                  bundler-cache: true
             - name: Install deb-s3
               run: gem install deb-s3
 
@@ -98,37 +94,38 @@ jobs:
 
             - name: Install AWS CLI
               run: |
-                pip install awscli
+                  pip install awscli
 
             - name: Configure GPG Key
               run: echo -n "$GPG_SIGNING_KEY" | base64 --decode | gpg --batch --import
               env:
-                GPG_SIGNING_KEY: ${{ secrets.GPG_SIGNING_KEY }}
-                GPG_SIGNING_KEY_PASSPHRASE: ${{ secrets.GPG_SIGNING_KEY_PASSPHRASE }}
-            - name: Publish to RPM repository
+                  GPG_SIGNING_KEY: ${{ secrets.GPG_SIGNING_KEY }}
+                  GPG_SIGNING_KEY_PASSPHRASE: ${{ secrets.GPG_SIGNING_KEY_PASSPHRASE }}
+
+            - name: Publish packages to repositories
               run: sh upload_to_s3.sh
               env:
-                INFISICAL_BINARY_S3_BUCKET: ${{ secrets.INFISICAL_BINARY_S3_BUCKET }}
-                GPG_SIGNING_KEY_ID: ${{ secrets.GPG_SIGNING_KEY_ID }} 
-                AWS_ACCESS_KEY_ID: ${{ secrets.INFISICAL_BINARY_REPO_AWS_ACCESS_KEY_ID }}
-                AWS_SECRET_ACCESS_KEY: ${{ secrets.INFISICAL_BINARY_REPO_AWS_SECRET_ACCESS_KEY }}
+                  INFISICAL_BINARY_S3_BUCKET: ${{ secrets.INFISICAL_BINARY_S3_BUCKET }}
+                  GPG_SIGNING_KEY_ID: ${{ secrets.GPG_SIGNING_KEY_ID }}
+                  AWS_ACCESS_KEY_ID: ${{ secrets.INFISICAL_BINARY_REPO_AWS_ACCESS_KEY_ID }}
+                  AWS_SECRET_ACCESS_KEY: ${{ secrets.INFISICAL_BINARY_REPO_AWS_SECRET_ACCESS_KEY }}
+                  CLOUDFRONT_DISTRIBUTION_ID: ${{ secrets.INFISICAL_BINARY_REPO_CLOUDFRONT_DISTRIBUTION_ID }}
 
     invalidate-cloudfront-cache:
         name: Invalidate Cloudfront cache
         needs:
-          - release-amd-debian-package
-          - release-amd-rpm-package
+            - release-packages
         runs-on: ubuntu-latest-8-cores
         steps:
             - uses: actions/setup-python@v4
               with:
-                python-version: '3.12'
+                  python-version: "3.12"
             - name: Install AWS CLI
               run: |
-                pip install awscli
+                  pip install awscli
             - name: Invalidate Cloudfront cache
-              run:  aws cloudfront create-invalidation --distribution-id $CLOUDFRONT_DISTRIBUTION_ID --paths "/rpm/Packages/*" "/rpm/repodata/*"
+              run: aws cloudfront create-invalidation --distribution-id $CLOUDFRONT_DISTRIBUTION_ID --paths "/rpm/Packages/*" "/rpm/repodata/* /deb/dists/stable/*"
               env:
-                AWS_ACCESS_KEY_ID: ${{ secrets.INFISICAL_BINARY_REPO_AWS_ACCESS_KEY_ID }}
-                AWS_SECRET_ACCESS_KEY: ${{ secrets.INFISICAL_BINARY_REPO_AWS_SECRET_ACCESS_KEY }}
-                CLOUDFRONT_DISTRIBUTION_ID: ${{ secrets.INFISICAL_BINARY_REPO_CLOUDFRONT_DISTRIBUTION_ID }}
+                  AWS_ACCESS_KEY_ID: ${{ secrets.INFISICAL_BINARY_REPO_AWS_ACCESS_KEY_ID }}
+                  AWS_SECRET_ACCESS_KEY: ${{ secrets.INFISICAL_BINARY_REPO_AWS_SECRET_ACCESS_KEY }}
+                  CLOUDFRONT_DISTRIBUTION_ID: ${{ secrets.INFISICAL_BINARY_REPO_CLOUDFRONT_DISTRIBUTION_ID }}
