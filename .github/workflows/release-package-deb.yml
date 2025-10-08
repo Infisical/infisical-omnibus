@@ -124,7 +124,7 @@ jobs:
               run: |
                   pip install awscli
             - name: Invalidate Cloudfront cache
-              run: aws cloudfront create-invalidation --distribution-id $CLOUDFRONT_DISTRIBUTION_ID --paths "/rpm/Packages/*" "/rpm/repodata/* /deb/dists/stable/*"
+              run: aws cloudfront create-invalidation --distribution-id $CLOUDFRONT_DISTRIBUTION_ID --paths "/rpm/Packages/*" "/rpm/repodata/* "/deb/dists/stable/*"
               env:
                   AWS_ACCESS_KEY_ID: ${{ secrets.INFISICAL_BINARY_REPO_AWS_ACCESS_KEY_ID }}
                   AWS_SECRET_ACCESS_KEY: ${{ secrets.INFISICAL_BINARY_REPO_AWS_SECRET_ACCESS_KEY }}
