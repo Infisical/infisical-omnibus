@@ -59,7 +59,8 @@ COPY ./ /omnibus-project
 # Set the working directory
 WORKDIR /omnibus-project
 
-RUN bundle install --binstubs
+# RUN bundle install --binstubs
+RUN bundle binstubs --all
 
 # Second stage
 FROM amazonlinux:2023
