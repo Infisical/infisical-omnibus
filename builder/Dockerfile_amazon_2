@@ -60,6 +60,7 @@ COPY ./ /omnibus-project
 WORKDIR /omnibus-project
 
 # RUN bundle install --binstubs
+RUN bundle install
 RUN bundle binstubs --all
 
 # Second stage
