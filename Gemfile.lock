@@ -1,8 +1,8 @@
 GIT
   remote: https://github.com/infisical/omnibus-software.git
-  revision: dd171125b10e9a457090cc20165ee4ecf2e0d51d
+  revision: 808559ae006a38778b57139f79da382532cb64ef
   specs:
-    omnibus-software (24.6.323)
+    omnibus-software (24.6.324)
       ffi (>= 1.17.0)
       omnibus (>= 9.0.0)
 
