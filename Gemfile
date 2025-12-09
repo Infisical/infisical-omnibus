@@ -5,7 +5,7 @@ gem 'omnibus', '~> 9.0'
 
 # Use Chef's software definitions. It is recommended that you write your own
 # software definitions, but you can clone/fork Chef's to get you started.
-gem 'omnibus-software', github: 'infisical/omnibus-software'
+gem 'omnibus-software', github: 'infisical/omnibus-software', ref: '808559a'
 source 'https://packagecloud.io/cinc-project/stable' do
   gem 'chef', '~> 18.3.0'
   gem 'chef-cli', '~> 5.6.1'
