@@ -1,10 +1,6 @@
-# infisical Omnibus project
+# Infisical Omnibus
 
-This project creates full-stack platform-specific packages for `infisical` in postgres version.
-
-## Version Mapping
-
-- v0.149.1 = v0.150.0-nightly-20250916.1
+This project creates full-stack platform-specific packages for `infisical`.
 
 ## Installation
 
