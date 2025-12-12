@@ -111,6 +111,41 @@ jobs:
                   AWS_SECRET_ACCESS_KEY: ${{ secrets.INFISICAL_BINARY_REPO_AWS_SECRET_ACCESS_KEY }}
                   CLOUDFRONT_DISTRIBUTION_ID: ${{ secrets.INFISICAL_BINARY_REPO_CLOUDFRONT_DISTRIBUTION_ID }}
 
+    create-github-release:
+        name: Create GitHub Release
+        needs:
+            - build-debian-package
+            - build-rpm-package
+            - release-packages
+        runs-on: ubuntu-latest
+        permissions:
+            contents: write
+        steps:
+            - name: Checkout source
+              uses: actions/checkout@v3
+              with:
+                  fetch-depth: 0
+
+            - name: Download debian packages
+              uses: actions/download-artifact@v4
+              with:
+                  name: debian-packages
+                  path: pkg
+
+            - name: Download rpm packages
+              uses: actions/download-artifact@v4
+              with:
+                  name: rpm-packages
+                  path: pkg
+
+            - name: Create GitHub Release
+              uses: softprops/action-gh-release@v2
+              with:
+                  files: pkg/*
+                  generate_release_notes: true
+              env:
+                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
     invalidate-cloudfront-cache:
         name: Invalidate Cloudfront cache
         needs:
