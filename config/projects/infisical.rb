@@ -14,8 +14,8 @@ require "#{Omnibus::Config.project_root}/lib/infisical/build/check.rb"
 build_version Build.version
 build_iteration 1
 
-replace         'infisical'
-conflict        'infisical'
+replace         'infisical-core'
+conflict        'infisical-core'
 
 license 'MIT'
 
