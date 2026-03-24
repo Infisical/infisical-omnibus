@@ -29,11 +29,11 @@ jobs:
                   sudo apt-get update
                   sudo apt-get install -y rpm
 
-            - name: Install rpmrepo-update
+            - name: Install repogen
               run: |
-                  curl -L https://github.com/e2llm/rpmrepo-update/releases/latest/download/rpmrepo-update-linux-amd64 -o rpmrepo-update
-                  chmod +x rpmrepo-update
-                  sudo mv rpmrepo-update /usr/local/bin/
+                  curl -L https://github.com/ralt/repogen/releases/latest/download/repogen-linux-amd64 -o repogen
+                  chmod +x repogen
+                  sudo mv repogen /usr/local/bin/
 
             - name: Install AWS CLI
               uses: actions/setup-python@v4
@@ -50,10 +50,11 @@ jobs:
                   GPG_SIGNING_KEY_PASSPHRASE: ${{ secrets.GPG_SIGNING_KEY_PASSPHRASE }}
 
             - name: Publish RPM packages
-              run: sh upload_to_s3.sh
+              run: sh test_upload_s3.sh
               env:
                   INFISICAL_BINARY_S3_BUCKET: ${{ secrets.INFISICAL_BINARY_S3_BUCKET }}
                   GPG_SIGNING_KEY_ID: ${{ secrets.GPG_SIGNING_KEY_ID }}
+                  GPG_SIGNING_KEY_PASSPHRASE: ${{ secrets.GPG_SIGNING_KEY_PASSPHRASE }}
                   AWS_ACCESS_KEY_ID: ${{ secrets.INFISICAL_BINARY_REPO_AWS_ACCESS_KEY_ID }}
                   AWS_SECRET_ACCESS_KEY: ${{ secrets.INFISICAL_BINARY_REPO_AWS_SECRET_ACCESS_KEY }}
                   CLOUDFRONT_DISTRIBUTION_ID: ${{ secrets.INFISICAL_BINARY_REPO_CLOUDFRONT_DISTRIBUTION_ID }}
