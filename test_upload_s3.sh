@@ -18,14 +18,12 @@ done
 
 # regenerate RPM repository metadata with repogen
 if ls *.rpm 1> /dev/null 2>&1; then
-    # parse version and arch from the first RPM file
-    FIRST_RPM=$(ls *.rpm | head -1)
-    RPM_VERSION=$(rpm -qp --queryformat '%{VERSION}' "$FIRST_RPM")
-    RPM_ARCH="x86_64"
+    REPO_VERSION="40"
+    REPO_ARCH="x86_64"
 
     # map S3 flat repodata into the versioned structure repogen expects
-    mkdir -p "repo/${RPM_VERSION}/${RPM_ARCH}/repodata"
-    aws s3 sync "s3://$INFISICAL_BINARY_S3_BUCKET/dummy/rpm/repodata" "repo/${RPM_VERSION}/${RPM_ARCH}/repodata" --delete
+    mkdir -p "repo/${REPO_VERSION}/${REPO_ARCH}/repodata"
+    aws s3 sync "s3://$INFISICAL_BINARY_S3_BUCKET/dummy/rpm/repodata" "repo/${REPO_VERSION}/${REPO_ARCH}/repodata" --delete
 
     # export GPG private key for repogen
     GPG_KEY_FILE=$(mktemp)
@@ -42,6 +40,6 @@ if ls *.rpm 1> /dev/null 2>&1; then
     rm -f "$GPG_KEY_FILE"
 
     # sync the generated repodata back to the flat S3 structure
-    aws s3 sync "repo/${RPM_VERSION}/${RPM_ARCH}/repodata" "s3://$INFISICAL_BINARY_S3_BUCKET/dummy/rpm/repodata"
+    aws s3 sync "repo/${REPO_VERSION}/${REPO_ARCH}/repodata" "s3://$INFISICAL_BINARY_S3_BUCKET/dummy/rpm/repodata"
 fi
 
