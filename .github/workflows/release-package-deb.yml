@@ -88,11 +88,12 @@ jobs:
                   sudo apt-get update
                   sudo apt-get install -y rpm
 
-            - name: Install rpmrepo-update
-              run: |
-                  curl -L https://github.com/e2llm/rpmrepo-update/releases/latest/download/rpmrepo-update-linux-amd64 -o rpmrepo-update
-                  chmod +x rpmrepo-update
-                  sudo mv rpmrepo-update /usr/local/bin/
+            # - name: Install rpmrepo-update
+            #   run: |
+            #       curl -L https://github.com/e2llm/rpmrepo-update/releases/latest/download/rpmrepo-update-linux-amd64 -o rpmrepo-update
+            #       chmod +x rpmrepo-update
+            #       sudo mv rpmrepo-update /usr/local/bin/
+            - run: pip install --upgrade cloudsmith-cli
 
             - name: Install AWS CLI
               run: |
@@ -112,6 +113,7 @@ jobs:
                   AWS_ACCESS_KEY_ID: ${{ secrets.INFISICAL_BINARY_REPO_AWS_ACCESS_KEY_ID }}
                   AWS_SECRET_ACCESS_KEY: ${{ secrets.INFISICAL_BINARY_REPO_AWS_SECRET_ACCESS_KEY }}
                   CLOUDFRONT_DISTRIBUTION_ID: ${{ secrets.INFISICAL_BINARY_REPO_CLOUDFRONT_DISTRIBUTION_ID }}
+                  CLOUDSMITH_API_KEY: ${{ secrets.CLOUDSMITH_API_KEY }}
 
     create-github-release:
         name: Create GitHub Release
