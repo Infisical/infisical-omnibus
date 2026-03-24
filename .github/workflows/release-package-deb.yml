@@ -88,9 +88,11 @@ jobs:
                   sudo apt-get update
                   sudo apt-get install -y rpm
 
-            - name: Install mkrepo and dependencies
+            - name: Install rpmrepo-update
               run: |
-                  pip install mkrepo univers boto3
+                  curl -L https://github.com/e2llm/rpmrepo-update/releases/latest/download/rpmrepo-update-linux-amd64 -o rpmrepo-update
+                  chmod +x rpmrepo-update
+                  sudo mv rpmrepo-update /usr/local/bin/
 
             - name: Install AWS CLI
               run: |

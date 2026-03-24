@@ -21,8 +21,7 @@ for i in *.rpm; do
 done
 
 
-# regenerate RPM repository metadata with mkrepo
+# regenerate RPM repository metadata with rpmrepo-update
 if ls *.rpm 1> /dev/null 2>&1; then
-    export GPG_SIGN_KEY=$GPG_SIGNING_KEY_ID
-    mkrepo s3://$INFISICAL_BINARY_S3_BUCKET/rpm --s3-access-key-id="$AWS_ACCESS_KEY_ID" --s3-secret-access-key="$AWS_SECRET_ACCESS_KEY" --s3-region="us-east-1" --sign
+    rpmrepo-update --backend s3 --repo-root s3://$INFISICAL_BINARY_S3_BUCKET/rpm --s3-region us-east-1 --sign-repodata --gpg-key "$GPG_SIGNING_KEY_ID" add *.rpm
 fi
