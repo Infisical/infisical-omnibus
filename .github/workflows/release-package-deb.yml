@@ -12,7 +12,7 @@ on:
 jobs:
     build-debian-package:
         name: Build debian amd package
-        runs-on: ubuntu-latest-8-cores
+        runs-on: ubuntu-latest-64-cores
         steps:
             - name: Checkout source
               uses: actions/checkout@v3
@@ -33,7 +33,7 @@ jobs:
 
     build-rpm-package:
         name: Build rpm amd package
-        runs-on: ubuntu-latest-8-cores
+        runs-on: ubuntu-latest-64-cores
         steps:
             - name: Checkout source
               uses: actions/checkout@v3
@@ -150,7 +150,7 @@ jobs:
         name: Invalidate Cloudfront cache
         needs:
             - release-packages
-        runs-on: ubuntu-latest-8-cores
+        runs-on: ubuntu-latest-64-cores
         steps:
             - uses: actions/setup-python@v4
               with:
