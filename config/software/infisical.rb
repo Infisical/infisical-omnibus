@@ -14,6 +14,10 @@ dependency 'nodejs'
 build do
   env = with_standard_compiler_flags(with_embedded_path)
   env['NODE_OPTIONS'] = '--max-old-space-size=8192'
+  # Consumed by the frontend at build time (Vite inlines it) and by the backend
+  # at runtime; without it the UI renders no platform version.
+  env['INFISICAL_PLATFORM_VERSION'] = "v#{Build.version}"
+  env['VITE_INFISICAL_PLATFORM_VERSION'] = "v#{Build.version}"
 
   block do
     # Build client application

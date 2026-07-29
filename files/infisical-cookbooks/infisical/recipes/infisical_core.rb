@@ -75,6 +75,14 @@ infisical_core_env = {
   'NODE_OPTIONS' => '--max-old-space-size=1024'
 }
 
+# Without this the backend reports "Development Mode" and the update check,
+# telemetry and UI version badge have no version to work with.
+version_manifest = '/opt/infisical-core/version-manifest.json'
+if File.exist?(version_manifest)
+  build_version = JSON.parse(File.read(version_manifest))['build_version']
+  infisical_core_env['INFISICAL_PLATFORM_VERSION'] = "v#{build_version}" unless build_version.nil?
+end
+
 # Iterate through each key-value pair in node['infisical']['user']
 node['infisical']['infisical_core'].each do |key, value|
   # Check if the key is fully capitalized and the value is not nil
