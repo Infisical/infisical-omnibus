@@ -1,6 +1,6 @@
 name 'nodejs'
 
-default_version '20.18.0'
+default_version '22.23.2'
 
 license 'MIT'
 license_file 'LICENSE'
@@ -19,9 +19,9 @@ build do
   # Download binary distribution
   binary_url = "https://nodejs.org/dist/v#{version}/node-v#{version}-linux-#{arch}.tar.gz"
   binary_checksum = if arch == 'x64'
-                      '24a5d58a1d4c2903478f4b7c3cfd2eeb5cea2cae3baee11a4dc6a1fed25fec6c'
+                      'b294a556e639d64338823920e5866c21c02741742d2e1529ee1a225c1ec9252a'
                     else
-                      '38bccb35c06ee4edbcd00c77976e3fad1d69d2e57c3c0c363d1700a2a2493278'
+                      '013b59cfd2819703a6f4a14ab891fc46fc2a4e3f5bcd92de3fb4929b43e35b30'
                     end
 
   command "curl -SLO #{binary_url}"
