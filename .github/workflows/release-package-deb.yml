@@ -58,6 +58,9 @@ jobs:
             - build-debian-package
             - build-rpm-package
         runs-on: ubuntu-latest-16-cores
+        outputs:
+            deb_version: ${{ steps.published-versions.outputs.deb_version }}
+            rpm_version: ${{ steps.published-versions.outputs.rpm_version }}
         steps:
             - name: Checkout source
               uses: actions/checkout@v3
@@ -114,6 +117,31 @@ jobs:
                   AWS_SECRET_ACCESS_KEY: ${{ secrets.INFISICAL_BINARY_REPO_AWS_SECRET_ACCESS_KEY }}
                   CLOUDFRONT_DISTRIBUTION_ID: ${{ secrets.INFISICAL_BINARY_REPO_CLOUDFRONT_DISTRIBUTION_ID }}
 
+            - name: Record published package versions
+              id: published-versions
+              run: |
+                  set -euo pipefail
+
+                  # upload_to_s3.sh has already renamed the rpm, so read whatever is in pkg/ now.
+                  debs=(pkg/*.deb)
+                  rpms=(pkg/*.rpm)
+                  if [ "${#debs[@]}" -ne 1 ] || [ "${#rpms[@]}" -ne 1 ]; then
+                      echo "::error::Expected exactly one .deb and one .rpm in pkg/, found: ${debs[*]} ${rpms[*]}"
+                      exit 1
+                  fi
+
+                  deb_version=$(dpkg-deb -f "${debs[0]}" Version)
+                  rpm_version=$(rpm -qp --qf '%{VERSION}-%{RELEASE}' "${rpms[0]}")
+                  if [ -z "$deb_version" ] || [ -z "$rpm_version" ]; then
+                      echo "::error::Could not read package versions (deb='$deb_version', rpm='$rpm_version')"
+                      exit 1
+                  fi
+
+                  echo "Published deb version: $deb_version"
+                  echo "Published rpm version: $rpm_version"
+                  echo "deb_version=$deb_version" >> "$GITHUB_OUTPUT"
+                  echo "rpm_version=$rpm_version" >> "$GITHUB_OUTPUT"
+
     create-github-release:
         name: Create GitHub Release
         needs:
@@ -162,11 +190,177 @@ jobs:
               run: |
                   pip install awscli
             - name: Invalidate Cloudfront cache
-              run: aws cloudfront create-invalidation --distribution-id $CLOUDFRONT_DISTRIBUTION_ID --paths "/rpm/Packages/*" "/rpm/repodata/*" "/deb/dists/stable/*"
+              run: |
+                  set -euo pipefail
+
+                  INVALIDATION_ID=$(aws cloudfront create-invalidation --distribution-id "$CLOUDFRONT_DISTRIBUTION_ID" --paths "/rpm/Packages/*" "/rpm/repodata/*" "/deb/dists/stable/*" --query 'Invalidation.Id' --output text)
+                  echo "Created invalidation $INVALIDATION_ID"
+
+                  # verify-published-repos must not run until edges stop serving the previous indexes.
+                  aws cloudfront wait invalidation-completed --distribution-id "$CLOUDFRONT_DISTRIBUTION_ID" --id "$INVALIDATION_ID"
               env:
                   AWS_ACCESS_KEY_ID: ${{ secrets.INFISICAL_BINARY_REPO_AWS_ACCESS_KEY_ID }}
                   AWS_SECRET_ACCESS_KEY: ${{ secrets.INFISICAL_BINARY_REPO_AWS_SECRET_ACCESS_KEY }}
                   CLOUDFRONT_DISTRIBUTION_ID: ${{ secrets.INFISICAL_BINARY_REPO_CLOUDFRONT_DISTRIBUTION_ID }}
+
+    verify-published-repos:
+        name: Verify published repo (${{ matrix.image }})
+        needs:
+            - release-packages
+            - invalidate-cloudfront-cache
+        runs-on: ubuntu-latest
+        timeout-minutes: 30
+        permissions:
+            contents: read
+        strategy:
+            fail-fast: false
+            matrix:
+                include:
+                    - family: deb
+                      image: debian:12
+                      version_output: deb_version
+                    - family: deb
+                      image: ubuntu:24.04
+                      version_output: deb_version
+                    - family: rpm
+                      image: amazonlinux:2023
+                      version_output: rpm_version
+                    - family: rpm
+                      image: rockylinux:9
+                      version_output: rpm_version
+        env:
+            REPO_URL: https://artifacts-infisical-core.infisical.com
+            IMAGE: ${{ matrix.image }}
+            EXPECTED_VERSION: ${{ needs.release-packages.outputs[matrix.version_output] }}
+        steps:
+            # Packages are ~300 MB and their postinst needs a real host, so they are never installed or
+            # downloaded in full: pool files are checked against the index size, rpms by their signed header.
+            - name: Write deb verification script
+              if: matrix.family == 'deb'
+              run: |
+                  set -euo pipefail
+
+                  cat > "$RUNNER_TEMP/verify.sh" <<'EOF'
+                  set -euo pipefail
+                  export DEBIAN_FRONTEND=noninteractive
+                  fail() { echo "FAIL: $*" >&2; exit 1; }
+                  content_length() { curl -fsSI --retry 3 --retry-all-errors "$1" | tr -d '\r' | awk 'tolower($1) == "content-length:" { n = $2 } END { print n }'; }
+
+                  apt-get update -qq
+                  apt-get install -y -qq curl ca-certificates > /dev/null
+                  curl -fsSL -o /tmp/setup.deb.sh "$REPO_URL/setup.deb.sh" || fail "could not fetch $REPO_URL/setup.deb.sh"
+                  bash /tmp/setup.deb.sh || fail "setup.deb.sh failed: apt-get rejected the repo indexes (see its output above)"
+
+                  keyring=/usr/share/keyrings/infisical-core-archive-keyring.gpg
+                  sources=/etc/apt/sources.list.d/infisical-core.list
+                  grep -q "signed-by=$keyring" "$sources" || fail "$sources does not pin signed-by=$keyring"
+                  if grep -q 'trusted=yes' "$sources"; then fail "$sources disables signature checks"; fi
+
+                  # apt silently falls back to Release when InRelease is missing, so check all three.
+                  dists="$REPO_URL/deb/dists/stable"
+                  work=$(mktemp -d)
+                  for f in InRelease Release Release.gpg; do
+                      curl -fsS -o "$work/$f" "$dists/$f" || fail "could not fetch $dists/$f"
+                  done
+                  gpgv --keyring "$keyring" "$work/Release.gpg" "$work/Release" || fail "Release.gpg does not verify Release"
+                  gpgv --keyring "$keyring" --output "$work/InRelease.txt" "$work/InRelease" || fail "InRelease signature does not verify"
+                  # Clearsigning does not cover trailing whitespace (deb-s3 writes "Suite: "), so compare without it.
+                  cmp -s <(sed 's/[[:space:]]*$//' "$work/InRelease.txt") <(sed 's/[[:space:]]*$//' "$work/Release") \
+                      || fail "InRelease and Release differ (one of them is stale)"
+
+                  apt-get update --error-on=any || fail "apt-get update reported errors"
+
+                  indexes=$(apt-get indextargets --format '$(FILENAME)' 'Created-By: Packages' | grep 'artifacts-infisical-core' || true)
+                  [ -n "$indexes" ] || fail "no Packages index found for $REPO_URL"
+                  for i in $indexes; do /usr/lib/apt/apt-helper cat-file "$i"; done \
+                      | awk '/^Package:/ { p = $2 } /^Version:/ { v = $2 } /^Filename:/ { f = $2 } /^Size:/ { s = $2 }
+                             /^$/ { if (f) print p, v, f, s; p = v = f = s = "" } END { if (f) print p, v, f, s }' \
+                      | sort -u > "$work/entries"
+                  awk -v v="$EXPECTED_VERSION" '$1 == "infisical-core" && $2 == v { found = 1 } END { exit !found }' "$work/entries" \
+                      || fail "infisical-core $EXPECTED_VERSION is not listed in Packages"
+
+                  missing=""
+                  while read -r _ _ path size; do
+                      actual=$(content_length "$REPO_URL/deb/$path" || true)
+                      [ "$actual" = "$size" ] || missing="$missing $path (index size $size, pool size ${actual:-missing})"
+                  done < "$work/entries"
+                  [ -z "$missing" ] || fail "listed in Packages but missing or wrong size in the pool:$missing"
+
+                  echo "OK: infisical-core $EXPECTED_VERSION is published and every indexed package is in the pool"
+                  EOF
+
+            - name: Write rpm verification script
+              if: matrix.family == 'rpm'
+              run: |
+                  set -euo pipefail
+
+                  cat > "$RUNNER_TEMP/verify.sh" <<'EOF'
+                  set -euo pipefail
+                  fail() { echo "FAIL: $*" >&2; exit 1; }
+                  content_length() { curl -fsSI --retry 3 --retry-all-errors "$1" | tr -d '\r' | awk 'tolower($1) == "content-length:" { n = $2 } END { print n }'; }
+
+                  curl -fsSL -o /tmp/setup.rpm.sh "$REPO_URL/setup.rpm.sh" || fail "could not fetch $REPO_URL/setup.rpm.sh"
+                  bash /tmp/setup.rpm.sh || fail "setup.rpm.sh failed: dnf rejected the repo indexes (see its output above)"
+
+                  repo=/etc/yum.repos.d/infisical-core.repo
+                  grep -qx 'gpgcheck=1' "$repo" || fail "$repo does not set gpgcheck=1"
+                  grep -qx 'repo_gpgcheck=1' "$repo" || fail "$repo does not set repo_gpgcheck=1"
+
+                  # repo_gpgcheck=1 makes dnf reject a missing or bad repomd.xml.asc when it loads the metadata here.
+                  entries=$(dnf repoquery -q --repo infisical-core --qf '%{name} %{evr} %{location} %{downloadsize}') \
+                      || fail "dnf could not load the repodata"
+                  [ -n "$entries" ] || fail "repodata lists no packages"
+                  location=$(dnf repoquery -q --repo infisical-core --qf '%{location}' "infisical-core-$EXPECTED_VERSION") \
+                      || fail "dnf could not query infisical-core-$EXPECTED_VERSION"
+                  [ -n "$location" ] || fail "infisical-core-$EXPECTED_VERSION is not listed in repodata"
+
+                  # rpm stops reading after the header (~20 MB), which carries the version and the signature.
+                  key=$(rpm -q gpg-pubkey --qf '%{VERSION} %{PACKAGER}\n' | awk 'tolower($0) ~ /infisical/ { print $1 }')
+                  [ -n "$key" ] || fail "the Infisical signing key was not imported by setup.rpm.sh"
+                  header=$(set +o pipefail; curl -sS "$REPO_URL/rpm/$location" 2> /dev/null \
+                      | rpm -qp --qf '%{VERSION}-%{RELEASE}|%{RSAHEADER:pgpsig}' - 2> /tmp/rpm.err || true)
+                  [ ! -s /tmp/rpm.err ] || fail "rpm/$location header does not verify: $(cat /tmp/rpm.err)"
+                  [ "${header%%|*}" = "$EXPECTED_VERSION" ] || fail "rpm/$location is ${header%%|*}, expected $EXPECTED_VERSION"
+                  case "${header#*|}" in
+                      *"Key ID "*"$key") ;;
+                      *) fail "rpm/$location is not signed with the Infisical key $key: ${header#*|}" ;;
+                  esac
+
+                  missing=""
+                  while read -r _ _ path size; do
+                      actual=$(content_length "$REPO_URL/rpm/$path" || true)
+                      [ "$actual" = "$size" ] || missing="$missing $path (repodata size $size, served size ${actual:-missing})"
+                  done < <(echo "$entries" | sort -u)
+                  [ -z "$missing" ] || fail "listed in repodata but missing or wrong size in rpm/Packages:$missing"
+
+                  echo "OK: infisical-core $EXPECTED_VERSION is published and every indexed package is in rpm/Packages"
+                  EOF
+
+            # Retries cover CloudFront edges that have not all picked up the invalidation yet.
+            - name: Download infisical-core ${{ env.EXPECTED_VERSION }} in a clean ${{ matrix.image }} container
+              run: |
+                  set -euo pipefail
+
+                  if [ -z "$EXPECTED_VERSION" ]; then
+                      echo "::error::No expected version was passed from release-packages"
+                      exit 1
+                  fi
+
+                  attempts=5
+                  for attempt in $(seq 1 "$attempts"); do
+                      echo "Attempt $attempt/$attempts"
+                      if docker run --rm -i --platform linux/amd64 -e REPO_URL -e EXPECTED_VERSION "$IMAGE" bash -s < "$RUNNER_TEMP/verify.sh"; then
+                          exit 0
+                      fi
+                      if [ "$attempt" -lt "$attempts" ]; then
+                          delay=$((attempt * 30))
+                          echo "Attempt $attempt failed, retrying in ${delay}s"
+                          sleep "$delay"
+                      fi
+                  done
+
+                  echo "::error::$REPO_URL does not serve a valid infisical-core $EXPECTED_VERSION for $IMAGE after $attempts attempts"
+                  exit 1
 
     notify-pipeline-blocked:
         name: Notify incident.io if pipeline blocked
@@ -177,6 +371,7 @@ jobs:
             - release-packages
             - create-github-release
             - invalidate-cloudfront-cache
+            - verify-published-repos
         if: always() && contains(needs.*.result, 'failure')
         steps:
             - name: Send blocked alert to incident.io
