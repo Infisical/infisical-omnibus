@@ -37,6 +37,8 @@ build do
   copy 'bin/npm', "#{install_dir}/embedded/bin/"
   copy 'bin/npx', "#{install_dir}/embedded/bin/"
   command "cp -r lib/node_modules #{install_dir}/embedded/lib/"
+  command "mkdir -p #{install_dir}/embedded/include"
+  command "cp -r include/node #{install_dir}/embedded/include/"
 
   # Set up npm and npx wrappers
   block do

@@ -19,6 +19,8 @@ build do
   clang_suffix = File.executable?('/usr/bin/clang-15') ? '-15' : ''
   env['CC'] = "clang#{clang_suffix}"
   env['CXX'] = "clang++#{clang_suffix}"
+  # Parallel node-gyp builds otherwise race to download headers into a shared cache, crashing clang with SIGBUS.
+  env['npm_config_nodedir'] = "#{install_dir}/embedded"
   # Consumed by the frontend at build time (Vite inlines it) and by the backend
   # at runtime; without it the UI renders no platform version.
   env['INFISICAL_PLATFORM_VERSION'] = "v#{Build.version}"
