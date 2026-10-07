@@ -1,0 +1,43 @@
+name: Check package build
+
+on:
+    pull_request:
+
+concurrency:
+    group: ${{ github.workflow }}-${{ github.event.pull_request.number }}
+    cancel-in-progress: true
+
+jobs:
+    build-package:
+        name: Build ${{ matrix.family }} package
+        runs-on: ubuntu-latest-64-cores
+        timeout-minutes: 120
+        permissions:
+            contents: read
+        strategy:
+            fail-fast: false
+            matrix:
+                include:
+                    - family: deb
+                      make_target: pkg-deb
+                      image: infisical-omnibus-debian-builder
+                    - family: rpm
+                      make_target: pkg-rpm
+                      image: infisical-omnibus-rpm-builder
+        steps:
+            - name: Checkout source
+              uses: actions/checkout@v4
+              with:
+                  fetch-depth: 0
+
+            - name: Build the ${{ matrix.family }} package
+              run: make ${{ matrix.make_target }}
+
+            - name: Check the package was produced
+              run: |
+                  set -euo pipefail
+                  container_id=$(docker create ${{ matrix.image }})
+                  docker cp "$container_id":/omnibus-project/pkg ./pkg
+                  docker rm "$container_id" > /dev/null
+                  ls -la pkg/
+                  compgen -G "pkg/*.${{ matrix.family }}" > /dev/null || { echo "::error::No .${{ matrix.family }} package in pkg/"; exit 1; }

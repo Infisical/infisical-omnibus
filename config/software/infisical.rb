@@ -14,6 +14,11 @@ dependency 'nodejs'
 build do
   env = with_standard_compiler_flags(with_embedded_path)
   env['NODE_OPTIONS'] = '--max-old-space-size=8192'
+  # Node 26 builds native addons as C++20: GCC < 14 rejects odbc's bundled node-addon-api,
+  # and clang < 15 lacks std::source_location for the V8 headers. Ubuntu 22.04's default clang is 14.
+  clang_suffix = File.executable?('/usr/bin/clang-15') ? '-15' : ''
+  env['CC'] = "clang#{clang_suffix}"
+  env['CXX'] = "clang++#{clang_suffix}"
   # Consumed by the frontend at build time (Vite inlines it) and by the backend
   # at runtime; without it the UI renders no platform version.
   env['INFISICAL_PLATFORM_VERSION'] = "v#{Build.version}"
