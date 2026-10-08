@@ -24,6 +24,7 @@ RUN apt-get update -q \
        autopoint \
        byacc \
        clang \
+       clang-15 \
        libclang-dev \
        libyaml-dev \
        libffi-dev \

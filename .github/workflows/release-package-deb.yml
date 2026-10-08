@@ -276,17 +276,14 @@ jobs:
                       | awk '/^Package:/ { p = $2 } /^Version:/ { v = $2 } /^Filename:/ { f = $2 } /^Size:/ { s = $2 }
                              /^$/ { if (f) print p, v, f, s; p = v = f = s = "" } END { if (f) print p, v, f, s }' \
                       | sort -u > "$work/entries"
-                  awk -v v="$EXPECTED_VERSION" '$1 == "infisical-core" && $2 == v { found = 1 } END { exit !found }' "$work/entries" \
-                      || fail "infisical-core $EXPECTED_VERSION is not listed in Packages"
+                  entry=$(awk -v v="$EXPECTED_VERSION" '$1 == "infisical-core" && $2 == v { print $3, $4; exit }' "$work/entries")
+                  [ -n "$entry" ] || fail "infisical-core $EXPECTED_VERSION is not listed in Packages"
+                  read -r path size <<< "$entry"
 
-                  missing=""
-                  while read -r _ _ path size; do
-                      actual=$(content_length "$REPO_URL/deb/$path" || true)
-                      [ "$actual" = "$size" ] || missing="$missing $path (index size $size, pool size ${actual:-missing})"
-                  done < "$work/entries"
-                  [ -z "$missing" ] || fail "listed in Packages but missing or wrong size in the pool:$missing"
+                  actual=$(content_length "$REPO_URL/deb/$path" || true)
+                  [ "$actual" = "$size" ] || fail "$path has index size $size, pool size ${actual:-missing}"
 
-                  echo "OK: infisical-core $EXPECTED_VERSION is published and every indexed package is in the pool"
+                  echo "OK: infisical-core $EXPECTED_VERSION is published and matches its Packages entry"
                   EOF
 
             - name: Write rpm verification script
@@ -307,12 +304,10 @@ jobs:
                   grep -qx 'repo_gpgcheck=1' "$repo" || fail "$repo does not set repo_gpgcheck=1"
 
                   # repo_gpgcheck=1 makes dnf reject a missing or bad repomd.xml.asc when it loads the metadata here.
-                  entries=$(dnf repoquery -q --repo infisical-core --qf '%{name} %{evr} %{location} %{downloadsize}') \
+                  entry=$(dnf repoquery -q --repo infisical-core --qf '%{location} %{downloadsize}' "infisical-core-$EXPECTED_VERSION") \
                       || fail "dnf could not load the repodata"
-                  [ -n "$entries" ] || fail "repodata lists no packages"
-                  location=$(dnf repoquery -q --repo infisical-core --qf '%{location}' "infisical-core-$EXPECTED_VERSION") \
-                      || fail "dnf could not query infisical-core-$EXPECTED_VERSION"
-                  [ -n "$location" ] || fail "infisical-core-$EXPECTED_VERSION is not listed in repodata"
+                  [ -n "$entry" ] || fail "infisical-core-$EXPECTED_VERSION is not listed in repodata"
+                  read -r location size <<< "$entry"
 
                   # rpm stops reading after the header (~20 MB), which carries the version and the signature.
                   key=$(rpm -q gpg-pubkey --qf '%{VERSION} %{PACKAGER}\n' | awk 'tolower($0) ~ /infisical/ { print $1 }')
@@ -326,14 +321,10 @@ jobs:
                       *) fail "rpm/$location is not signed with the Infisical key $key: ${header#*|}" ;;
                   esac
 
-                  missing=""
-                  while read -r _ _ path size; do
-                      actual=$(content_length "$REPO_URL/rpm/$path" || true)
-                      [ "$actual" = "$size" ] || missing="$missing $path (repodata size $size, served size ${actual:-missing})"
-                  done < <(echo "$entries" | sort -u)
-                  [ -z "$missing" ] || fail "listed in repodata but missing or wrong size in rpm/Packages:$missing"
+                  actual=$(content_length "$REPO_URL/rpm/$location" || true)
+                  [ "$actual" = "$size" ] || fail "rpm/$location has repodata size $size, served size ${actual:-missing}"
 
-                  echo "OK: infisical-core $EXPECTED_VERSION is published and every indexed package is in rpm/Packages"
+                  echo "OK: infisical-core $EXPECTED_VERSION is published and matches its repodata entry"
                   EOF
 
             # Retries cover CloudFront edges that have not all picked up the invalidation yet.

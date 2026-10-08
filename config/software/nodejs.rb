@@ -1,6 +1,6 @@
 name 'nodejs'
 
-default_version '22.23.2'
+default_version '26.10.0'
 
 license 'MIT'
 license_file 'LICENSE'
@@ -19,9 +19,9 @@ build do
   # Download binary distribution
   binary_url = "https://nodejs.org/dist/v#{version}/node-v#{version}-linux-#{arch}.tar.gz"
   binary_checksum = if arch == 'x64'
-                      'b294a556e639d64338823920e5866c21c02741742d2e1529ee1a225c1ec9252a'
+                      'cb5c9ce9c80d7b8821e3a258543c71b939138cf17c74d5cc44bbe85d6dbc5ad8'
                     else
-                      '013b59cfd2819703a6f4a14ab891fc46fc2a4e3f5bcd92de3fb4929b43e35b30'
+                      '423a41bff8e2a2fa15e702fefe2919ef95823b2378744daccb8439302534b44f'
                     end
 
   command "curl -SLO #{binary_url}"
@@ -37,6 +37,8 @@ build do
   copy 'bin/npm', "#{install_dir}/embedded/bin/"
   copy 'bin/npx', "#{install_dir}/embedded/bin/"
   command "cp -r lib/node_modules #{install_dir}/embedded/lib/"
+  command "mkdir -p #{install_dir}/embedded/include"
+  command "cp -r include/node #{install_dir}/embedded/include/"
 
   # Set up npm and npx wrappers
   block do

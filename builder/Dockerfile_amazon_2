@@ -18,6 +18,7 @@ RUN yum update -y -q \
 
 RUN yum update -y -q \
     && yum install -y \
+    clang \
     clang-devel \
     curl-devel \
     expat-devel \
