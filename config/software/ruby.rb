@@ -24,7 +24,7 @@ skip_transitive_dependency_licensing true
 
 # Follow the Ruby upgrade guide when changing the ruby version
 # link: https://docs.gitlab.com/ee/development/ruby_upgrade.html
-current_ruby_version = Infisical::Util.get_env('RUBY_VERSION') || '3.2.5'
+current_ruby_version = Infisical::Util.get_env('RUBY_VERSION') || '3.3.13'
 default_version current_ruby_version
 
 fips_enabled = Build::Check.use_system_ssl?
@@ -44,6 +44,7 @@ version('3.1.5') { source sha256: '3685c51eeee1352c31ea039706d71976f53d00ab6d773
 version('3.2.3') { source sha256: 'af7f1757d9ddb630345988139211f1fd570ff5ba830def1cc7c468ae9b65c9ba' }
 version('3.2.4') { source sha256: 'c72b3c5c30482dca18b0f868c9075f3f47d8168eaf626d4e682ce5b59c858692' }
 version('3.2.5') { source sha256: 'ef0610b498f60fb5cfd77b51adb3c10f4ca8ed9a17cb87c61e5bea314ac34a16' }
+version('3.3.13') { source sha256: '4cae72e971bd1cdb20ca87d299111182417c5276c162de8ead0ab0531426cd61' }
 
 source url: "https://cache.ruby-lang.org/pub/ruby/#{version.match(/^(\d+\.\d+)/)[0]}/ruby-#{version}.tar.gz"
 
@@ -134,6 +135,9 @@ build do
   configure(*configure_command, env: env)
   make "-j #{workers}", env: env
   make "-j #{workers} install", env: env
+
+  # Nothing in the package uses IMAP, so drop the net-imap copy Ruby bundles
+  gem 'uninstall net-imap --all --executables --ignore-dependencies', env: env
 
   # Install OpenSSL gem for FIPS fixes
   gem "install openssl --version '#{Infisical::Util.get_env('OPENSSL_GEM_VERSION')}' --force --no-document"
