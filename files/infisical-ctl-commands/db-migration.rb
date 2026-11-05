@@ -50,7 +50,7 @@ add_command_under_category 'migration', 'database', 'Database operations', 2 do 
   if valid_subcommands.include?(command)
     Dir.chdir('/opt/infisical-core/server') do
       system({ 'DB_CONNECTION_URI' => db_connection_value,
-               'PATH' => "#{ENV['PATH']}:/opt/infisical-core/embedded/bin" }, "npm run migration:#{command}")
+               'PATH' => "/opt/infisical-core/embedded/bin:#{ENV['PATH']}" }, "npm run migration:#{command}")
     end
   else
     puts "Unknown command: #{command}"
